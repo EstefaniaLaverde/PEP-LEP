@@ -1,25 +1,49 @@
 from copy import deepcopy
+import random
 from sage.all import shuffle, zero_matrix, randint, binomial, log, GF, FiniteField, rank, floor, ceil, random_matrix
 import itertools
 from math import sqrt
 
-# No need to import 'sorted' from sage.all because Python handles it globally natively!
 
 def check_solution(Q, G1, G2):
+    """
+    Check if Q is a solution to the LCE instance defined by G1 and G2, i.e., if G1*Q and G2 generate the same code.
 
+    Args:
+        Q: monomial matrix
+        G1: generator matrix of the first code
+        G2: generator matrix of the second code
+
+    Returns:
+        1 if Q is a solution, 0 otherwise
+    """
+
+    # first check if Q is a monomial matrix, if not, return 0 immediately
     if not(is_monomial(Q)):
         return 0
 
+    # compute RREF(G1*Q) and RREF(G2) and check if they are the same
     if G2.rref() != (G1 * Q).rref():
         return 0
 
     return 1
 
 def is_monomial(Q):
+    """
+    Check if a matrix Q is a monomial matrix.
 
+    Args:
+        Q: matrix to check
+
+    Returns:
+        True if Q is monomial, False otherwise
+    """
+
+    # if Q is None, return False
     if Q == None:
         return False
 
+    # check if Q has exactly one non-zero entry in each row and each column
     for i in range(Q.nrows()):
         count = 0
         for j in range(Q.ncols()):
@@ -41,7 +65,7 @@ def is_monomial(Q):
 
 def sample_low_weight(n, q, w):
     '''
-    Sample a codeword of length n and weight w
+    Sample a codeword of length n and weight w by selecting w random positions and assigning them random non zero values in Fq
     :param n: length of the codeword
     :param q: modulo
     :param w: Hamming weight
@@ -117,7 +141,7 @@ def sample_monomial_matrix(n, q):
 
 def minimal_w(n, k, q):
     '''
-    Return the minimum weight of a (n,k) code over Fq
+    Return the minimum weight of a (n,k) code over Fq, according to the Gilbert-Varshamov bound. 
     :param n: length
     :param k: dimension
     :param q: modulo
@@ -133,7 +157,9 @@ def minimal_w(n, k, q):
         w = w+1
 
 def H_q(x, q):
-    """q-ary entropy function (base q)."""
+    """
+    q-ary entropy function (base q).
+    """
     if x <= 0 or x >= 1:
         return 0.0
     return (x * log(q-1, q)
@@ -408,3 +434,156 @@ def calculate_article_list_size(n, k, q, w):
     
     # The algorithm fundamentally requires at least 2 items to form combinations
     return max(2, int(target_N))
+
+def sample_noisy_monomial(Q, q, alpha, beta):
+    """
+    Generates a noisy version of a monomial matrix Q based on error rates alpha and beta.
+    
+    Args:
+        Q: The original clean monomial matrix (Sage matrix over GF(q))
+        q: The finite field modulus
+        alpha: Probability of a non-zero entry changing to 0
+        beta: Probability of a zero entry changing to a random non-zero element
+        
+    Returns:
+        Q_noisy: A new matrix with applied noise
+    """
+    # create a deep copy to avoid modifying the original matrix
+    Q_noisy = deepcopy(Q)
+    n_rows = Q_noisy.nrows()
+    n_cols = Q_noisy.ncols()
+    F = GF(q)
+    
+    for i in range(n_rows):
+        for j in range(n_cols):
+            current_val = Q_noisy[i, j]
+            
+            if current_val != 0:
+                # Non-zero entry drops to 0 with probability alpha
+                if random.random() < alpha:
+                    Q_noisy[i, j] = F(0)
+            else:
+                # Zero entry flips to a random field element with probability beta
+                if random.random() < beta:
+                    # Pick a random element from 1 to q-1
+                    random_nonzero = F(randint(1, q - 1))
+                    Q_noisy[i, j] = random_nonzero
+                    
+    return Q_noisy
+
+def analyze_noisy_codewords(a1, a2, Q, Q_noisy, q):
+    """
+    Simulates the generation of clean and noisy codeword pairs and performs
+    the filtering check based on matching indices.
+    
+    Args:
+        a1, a2: Clean low-weight codewords from Code 1 (1 x n matrices)
+        Q: The true, clean monomial matrix
+        Q_noisy: The degraded hint matrix
+        q: Modulo of the field
+        
+    Returns:
+        A dictionary containing the noisy vectors and a strategy array for each column.
+    """
+    # 1. Obtain clean counterparts based on the real Q
+    # Note: Depending on your convention, if vectors are 1 x n rows, 
+    # multiplying by an n x n matrix is done as: b = a * Q
+    b1 = a1 * Q
+    b2 = a2 * Q
+    
+    # 2. Obtain noisy counterparts based on Q_noisy
+    b1_noisy = a1 * Q_noisy
+    b2_noisy = a2 * Q_noisy
+    
+    n = Q.ncols()
+    column_strategies = {}
+    
+    # 3. Check consistency index by index
+    for i in range(n):
+        # Check if both vectors match their noisy versions at index i
+        match_b1 = (b1[0, i] == b1_noisy[0, i])
+        match_b2 = (b2[0, i] == b2_noisy[0, i])
+        
+        if match_b1 and match_b2:
+            column_strategies[i] = {
+                "action": "trust_hint",
+                "trusted_column": Q_noisy[:, i] # Keep the column intact
+            }
+        else:
+            column_strategies[i] = {
+                "action": "full_search",
+                "reason": "Mismatched codeword entry detected due to channel noise."
+            }
+            
+    return {
+        "b1_noisy": b1_noisy,
+        "b2_noisy": b2_noisy,
+        "strategies": column_strategies
+    }
+
+def reconstruct_Q_from_noise(Q_noisy, q, pairs):
+    """
+    Reconstructs the true monomial matrix Q using a noisy matrix hint 
+    and two known equivalent codeword pairs.
+    
+    Args:
+        Q_noisy: The noisy matrix hint (matrix over GF(q))
+        q: Modulo of the finite field
+        pairs: List of pairs [[a1, b1], [a2, b2]] where b_i = a_i * Q
+        
+    Returns:
+        Q_reconstructed: The reconstructed matrix, or None if it fails.
+    """
+    n = Q_noisy.ncols()
+    F = GF(q)
+    
+    # Initialize an empty matrix to build the reconstruction
+    Q_reconstructed = zero_matrix(F, n, n)
+    
+    # Extract the test pairs
+    a1, b1 = pairs[0][0], pairs[0][1]
+    a2, b2 = pairs[1][0], pairs[1][1]
+    
+    # Precompute the noisy products to evaluate the filtering rule
+    b1_noisy = a1 * Q_noisy
+    b2_noisy = a2 * Q_noisy
+    
+    for j in range(n):
+        # 1. Check if the noisy column produces the correct codeword elements
+        if (b1[0, j] == b1_noisy[0, j]) and (b2[0, j] == b2_noisy[0, j]):
+            # Noise-free column detected: trust and copy the entire column from Q_noisy
+            for i in range(n):
+                Q_reconstructed[i, j] = Q_noisy[i, j]
+                
+        # 2. Otherwise, noise occurred. We must exhaustively resolve this column.
+        else:
+            possible_candidates = []
+            
+            # Test every possible row 'i' where the single non-zero entry could live
+            for i in range(n):
+                # Test every possible non-zero scalar value 'v' in the field
+                for v_int in range(1, q):
+                    v = F(v_int)
+                    
+                    # Verify if placing 'v' at row 'i' satisfies both equations
+                    cond1 = (a1[0, i] * v == b1[0, j])
+                    cond2 = (a2[0, i] * v == b2[0, j])
+                    
+                    if cond1 and cond2:
+                        possible_candidates.append((i, v))
+            
+            # If our two codewords successfully isolated a unique entry arrangement:
+            if len(possible_candidates) == 1:
+                target_i, target_v = possible_candidates[0]
+                Q_reconstructed[target_i, j] = target_v
+            elif len(possible_candidates) > 1:
+                # Ambiguity occurs if the low-weight codewords have zeroes at index i.
+                # In your full framework, this triggers your tree-backtracking search!
+                print(f"Ambiguity at column {j}: multiple candidates match. Selection required.")
+                # For this baseline script, we select the first one found
+                target_i, target_v = possible_candidates[0]
+                Q_reconstructed[target_i, j] = target_v
+            else:
+                print(f"Warning: No valid candidate found for column {j}.")
+                
+    return Q_reconstructed
