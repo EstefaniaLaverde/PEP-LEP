@@ -1,0 +1,18 @@
+{
+  "n": 128,
+  "k": 64,
+  "q": 127,
+  "alpha": 0.01,
+  "beta": 0.05,
+  "weight_factor": 1.1,
+  "budgets": 5,
+  "seed": 28,
+  "target_weight": 54,
+  "v_weight": 54,
+  "r_v": 16,
+  "rmax": 10,
+  "tau": 20,
+  "elapsed_s": 27.4412579536438,
+  "outcome": "failed",
+  "repaired": false
+}

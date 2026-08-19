@@ -1,0 +1,2 @@
+n,k,q,w,alpha,beta,H_tilde_size,success,decoding_time_seconds,timeout_occurred
+7,3,7,2,0.0100000000000000,0.200000000000000,"(24, 49)",True,0.004607200622558594,False
