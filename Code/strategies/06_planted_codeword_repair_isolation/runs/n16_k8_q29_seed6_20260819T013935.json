@@ -1,0 +1,18 @@
+{
+  "n": 16,
+  "k": 8,
+  "q": 29,
+  "alpha": 0.01,
+  "beta": 0.08,
+  "weight_factor": 1.1,
+  "budgets": 5,
+  "seed": 6,
+  "target_weight": 8,
+  "v_weight": 8,
+  "r_v": 2,
+  "rmax": 3,
+  "tau": 6,
+  "elapsed_s": 0.0004980564117431641,
+  "outcome": "correct",
+  "repaired": true
+}
