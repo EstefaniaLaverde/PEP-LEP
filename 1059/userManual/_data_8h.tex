@@ -1,0 +1,45 @@
+\doxysection{Data.\+h File Reference}
+\label{_data_8h}\index{Data.h@{Data.h}}
+
+
+Declaration of global variables and structures used in the calculations.  
+
+
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\label{_data_8h_af288fb09859cdecccd6f1aca5c850385} 
+typedef struct \+\_\+dmatlu\+\_\+type {\bfseries dynamic\+\_\+mat\+\_\+short}
+\begin{DoxyCompactList}\small\item\em Definition of dynamic structure describing generator matrix of a linear code saved as dynamic array of unsigned long long int elements. \end{DoxyCompactList}\item 
+\label{_data_8h_a2e64f7d7fdc0a94d94bd97542d79387c} 
+typedef struct \+\_\+dmat\+\_\+type {\bfseries dmat\+\_\+type}
+\begin{DoxyCompactList}\small\item\em Definition of dynamic structure describing generator matrix of a linear code saved as dynamic array of char elements. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\label{_data_8h_a5fc395500944b8c191df8d503631d4a6} 
+\textbf{ dmat\+\_\+type} {\bfseries bits\+Char\+CF}
+\begin{DoxyCompactList}\small\item\em Dynamic matrix for calculation when using byte representation. \end{DoxyCompactList}\item 
+\label{_data_8h_ac399536536b43901ec8acb842770ea79} 
+\textbf{ dynamic\+\_\+mat\+\_\+short} {\bfseries bits}
+\begin{DoxyCompactList}\small\item\em Dynamic matrix for calculation when using bit representation. \end{DoxyCompactList}\item 
+\label{_data_8h_ab42801c87cce00790ac0da9e0520698b} 
+\textbf{ dynamic\+\_\+mat\+\_\+short} {\bfseries matrix}
+\begin{DoxyCompactList}\small\item\em Dynamic matrix for used to save the read matrix. \end{DoxyCompactList}\item 
+\label{_data_8h_a83fb36090262e9b2cb58b74331edf21e} 
+\textbf{ dynamic\+\_\+mat\+\_\+short} {\bfseries matrixH}
+\begin{DoxyCompactList}\small\item\em Dynamic matrix for used for calculation without registers. \end{DoxyCompactList}\item 
+int \textbf{ test}
+\begin{DoxyCompactList}\small\item\em Global variable that is used to force the use of a specific instruction set for testing purposes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Variable Documentation}
+\label{_data_8h_a1bd3f5fbccb1628eb13dda4cd02633a4} 
+\index{Data.h@{Data.h}!test@{test}}
+\index{test@{test}!Data.h@{Data.h}}
+\doxysubsubsection{test}
+{\footnotesize\ttfamily int test\hspace{0.3cm}{\ttfamily [extern]}}
+
+\begin{DoxyNote}{Note}
+if value $>$ 0, then the value of instruction\+Set parameter, defined in \doxyref{Lin\+Code\+Weight\+Inv.\+h}{p.}{_lin_code_weight_inv_8h}, is set to the same value 
+\end{DoxyNote}

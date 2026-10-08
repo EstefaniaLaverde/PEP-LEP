@@ -14,6 +14,7 @@ Code/
     04_error_distribution_analysis/            noise/error distribution analysis
     05_full_parameter_sweep/                   the big 3-enumerator x 3-repair-algorithm sweep
     06_planted_codeword_repair_isolation/      isolates the repair stage from the search problem
+    07_list_based_prediction_and_repair/       Q as two lists (permutation, values) + Algorithm 5
   archive/                                     superseded code, kept for history only
 ```
 
@@ -107,7 +108,37 @@ stage works). The most recent/active strategy folder as of this reorg.
   itself; saves every run's full instance and outcome to `runs/` when `SAVE_RUN = True`.
 - `visualize_runs.ipynb` — reads `runs/*.json` for an aggregate view across runs, and
   `runs/*.sobj` (via Sage's `load()`) for a deep dive into one run's actual matrices/vectors.
+- `lincodeweightinv_analysis.ipynb` — loads a saved run's `G1` and runs it through
+  **LinCodeWeightInv** (ACM TOMS Algorithm 1059, external library in `../../../1059/`,
+  not part of this repo) via the small CLI bridge `1059/Src/testProgram/LinCodeBridge.cpp`:
+  either the full weight spectrum (bar-plotted) or a count/search for codewords below the
+  run's `target_weight`. See the notebook's own setup cell for the one-time build steps,
+  and `LinCodeBridge.cpp`'s header comment for why it doesn't use LinCodeWeightInv's own
+  file format (a digit-width bug there corrupts `q=127` matrices).
 - `runs/` — saved run data (`.sobj` + `.json` pairs), one per `run_instance()` call.
+
+### 07_list_based_prediction_and_repair/
+Explores representing the secret monomial `Q` as two lists (a permutation list and a
+diagonal-values list) instead of the full n x n matrix, per the thesis advisor's suggestion,
+and reconstructs it with the paper's dedicated Algorithm 5 (`MonomialApproximationVector`,
+Section 5.5) rather than routing it through the full-matrix Algorithm 6.
+- `list_based_posterior_pseudocode.md` - design notes for the entrywise-table detour
+  (`compute_posterior_table_list_based`), including the modulus-wraparound treatment of
+  out-of-range leaked observations and its validation (numpy-mirrored, not yet run with Sage).
+- `planted_codeword_repair_test_list_based.py` - list-based counterpart of
+  `06_planted_codeword_repair_isolation/planted_codeword_repair_test.py`, using
+  `compute_posterior_table_list_based` + `monomial_approximation` (the entrywise-table route,
+  i.e. Algorithm 6 fed a table built from the two lists).
+- `planted_codeword_repair_test_list_based_algo5.py` - sibling to the above, using
+  `compute_vector_posteriors_list_based` + `monomial_approximation_vector`
+  (`core/LEP_prediction_and_repair_v2.py`) instead - the paper's actual decoupled Algorithm 5,
+  kept separate so the two reconstruction paths can be compared side by side on the same
+  planted-codeword construction and repair stage.
+- `algorithm5_demo.ipynb` - small interactive notebook (SageMath kernel) for testing Algorithm
+  5 on its own at a size you can actually look at: builds a small instance, leaks it, runs
+  `monomial_approximation_vector`, and visualizes `Q` vs. `Q_hat` and the permutation
+  posteriors; also compares against the naive "matrix straight from the two vectors"
+  construction fed through the original Algorithm 6 pipeline.
 
 ## archive/
 

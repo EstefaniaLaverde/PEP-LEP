@@ -1,0 +1,81 @@
+\section{Introduction}
+	 The current manual presents a library for calculating some weight characteristics of a linear code. A linear $[n,k]_q$ code is a $k$-dimensional subspace of the $n$-dimensional vector space over the Galois field with $q$ elements. The parameters $n$ and $k$ are called length and dimension of C, respectively, and the vectors in C are called codewords. For an arbitrary codeword $v \in C$, its (Hamming) weight wt(v) is defined as the number of its non-zero coordinates. If $A_i$ is the number of codewords of weight i in C, $i = 0, 1, \dots, n$, then
+	 the sequence ($A_0, A_1, \dots, A_n$) is called the weight distribution of C. A $k \times n$ matrix $G$, whose rows form a basis of $C$, is called a generator matrix of the code. \\
+	 Our library presents six different functions for calculation of some  characteristics of a linear code connected to its weight distribution. The data required for the calculations are: number of field elements (q), code length (n), code dimension (k) and a generator matrix. The main optimizations implemented in the library are based on the \emph{Single Instruction Multiple Data} model of parallel programming. The extended vector registers in the modern Central Processing Units (CPU) are used for the implementation of this parallelization \cite{intel, arm}. 
+	 The optimizations are based on different implementations of algorithms for vector addition over finite fields with $q \leq 64$ elements. 
+	 
+
+	\subsection{Field Elements Representation}\label{reprSection}
+	The elements of a finite Galois field $F_q$ can be considered as the residuals modulo a prime number $p$ for $q=p$. In the case of composite field with $q = p^m$ for a prime $p$ and $m>1$ the elements can be represented as polynomials of degree at most $m-1$ with coefficients from the prime field $F_p$. There is a natural representation of the elements of any Galois field as a serial number (or \emph{index}) that allows easy indexation in a computer memory as an integer. The residuals modulo p for a prime p form a prime field with p elements. In the case of composite field the index of each element is calculated by the formula 
+	\begin{equation}\label{serialNumber}
+		index =\sum_{i=0}^{i<m-1}a_ip^i,
+	\end{equation}
+	 where $a_i$ is the coefficient in the polynomial before $x^i$. The elements of the field can also be presented as the \textbf{0} and powers of a primitive element of the field \cite{NiederreiterFiniteFields}. 
+	 Therefore, we have three different representations of the elements of a composite field - additive, multiplicative and as a serial number (\emph{index}). The additive representation saves the coefficients of the polynomial as a $m$-dimensional vector over the prime field. This representation is used for the core computation and optimizations. The multiplicative representations consists of the power of the primitive element. The indexation of the elements of the field shown in formula \ref{serialNumber} and the multiplicative form are used mostly for the input of the generator matrix. Table \ref{elementsForms} gives an example of the three main methods of representation of the elements of the field $F_9$.
+	 	\begin{table}
+	 	\caption{Elements representations for $F_9$}
+	 	\label{elementsForms}
+	 	\begin{center}
+	 		\begin{tabular}{|c|c|c|}
+	 			\hline
+	 			Index & Polynomial form  &  Multiplicative form\\
+	 			\hline
+	 			\hline
+	 		 	0 & 0 & 9\\
+	 			\hline
+	 			1 & 1 & $x^0$\\
+	 			\hline
+	 			2 & 2 & $x^4$\\
+	 			\hline
+	 			3 & x & $x^1$\\
+	 			\hline
+	 			4 & x+1 & $x^7$ \\
+	 			\hline
+	 			5 & x+2 & $x^6$ \\
+	 			\hline
+	 			6 & 2x & $x^5$\\
+	 			\hline
+	 			7 & 2x+1 & $x^2$\\
+	 			\hline
+				8 & 2x+2 & $x^3$\\
+				\hline
+	 		\end{tabular}
+	 	\end{center}
+	 \end{table}
+	
+	Some of the initialization in the library execute addition and multiplication of the elements of a composite field using their polynomial form. Thus, we have initialized primitive polynomials for the different composite fields. They are initialized in the file \emph{Polynomials.cpp} function \emph{void maketablecomp(int q)}. Table \ref{polynomials} shows which primitive irreducible polynomials are used in the current version for the library and some alternative polynomials for the different fields. \\
+		\begin{table}
+		\caption{Primitive polynomials for $q \leq 64$}
+		\label{polynomials}
+		\begin{center}
+			\begin{tabular}{|c|c|c|}
+				\hline
+				Finite Field & Initialized Primitive Polynomial   &  Alternative  Primitive Polynomials\\
+				\hline
+				\hline
+				$F_4$ & $x^2 + x + 1$ & -\\
+				\hline
+				$F_8$ & $x^3+x+1$& $x^3+x^2+1$\\
+				\hline
+				$F_9$ & $x^2+x+2$ & $x^2+2x+2$ \\
+				\hline
+				$F_{16}$ & $x^4+x+1$ & $x^4 + x^3 +1$ \\	
+				\hline
+				$F_{25}$ & $x^2+x+2$ & $x^2+2x+3$; $x^2+3x+3$; $x^2+4x+2$\\
+				\hline
+				$F_{27}$ & $x^3+2x+1$ & $x^3 + 2x^2 +1$; $x^3+x^2+2x+1$; $x^3+2x^2+x+1$\\
+				\hline
+				 &  & $x^5+x^3+1$; $x^5 + x^3 + x^2+x+1$\\
+				$F_{32}$ & $x^5+x^2+1$ & $x^5 + x^4 + x^2 +x+1$; $x^5 + x^4 + x^3 +x+1$ \\
+				& &$x^5 + x^4 + x^3 +x^2 +1$\\
+				\hline
+				$F_{49}$ & $x^2+x+3$ & $x^2+2x+3$; $x^2+2x+5$; $x^2+3x+5$ \\
+				& & $x^2+4x+5$; $x^2+5x+3$; $x^2+5x+5$; $x2+6x+3$\\
+				\hline
+				 &  & $x^6+x^5+1$; $x^6+x^4+x^3+x+1$ \\
+				$F_{64}$& $x^6+x+1$ & $x^6+x^5+x^2+x+1$; $x^6+x^5+x^3+x^2+1$;\\
+				& & $x^6+x^5+x^4+x+1$\\
+				\hline
+			\end{tabular}
+		\end{center}
+	\end{table}

@@ -216,13 +216,13 @@ def generate_noisy_LCE_instance_CBA_bit_flip_version(n, k, q, alpha, beta, is_mo
 
     G2 = (G1*QP).rref()
 
-    # Obtain noisy hint for G2
+    # Obtain noisy hint for G2 - kept RAW (NOT coerced into GF(q)): an
+    # out-of-range raw bit string must survive unreduced for
+    # compute_posterior_table_exact's thesis-exact scoring to work (see
+    # build_bit_channel_matrix_exact's docstring in LEP_prediction_and_repair_v2.py).
+    # Coercing into GF(q) here would silently reduce it modulo q, which is
+    # exactly the bug that was fixed.
     QP_noisy = generate_bit_channel_hint(QP, q, alpha, beta)
-
-    # Pass QP to a matrix on the field l, where l is the maximum value the bits for the field can create
-    bits_needed = math.ceil(math.log2(q))
-    l = 2**bits_needed
-    QP_noisy = matrix(GF(q), QP_noisy)
 
     return G1, G2, QP, QP_noisy
 

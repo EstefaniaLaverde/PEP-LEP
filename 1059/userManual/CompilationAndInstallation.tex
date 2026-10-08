@@ -1,0 +1,185 @@
+	The library source files are contained in the subdirectory \emph{Src} referred as \emph{main directory} in the user manual. Figure \ref{fileStruct} shows its structure. The current package contains the library, a simple interface program that can be used for calculations and four testing programs that can be used to reproduce the results presented in the manuscript (for 128-, 256- and 512-bit registers and using scalar computations). In this section we present how to use the given Cmake and make files to compile the library and testing programs. For this purpose, a supported C/C++ compiler and \emph{make} or \emph{Cmake} should be installed. If using Cmake the minimum required version is 3.16 or newer. The library is developed for x86 and arm architectures that have NEON instruction set (ARMv8 64-bit architecture or newer). Compilation targeting other architectures is not supported.
+	
+	%The library source and data files are given in a single compressed (.zip) file. To compile, install and run the library and the included Source program, the files need to be extracted. The resulted directory with name \emph{LinCodeWeigntInv} (if not changed) is referred to as main directory. Figure \ref{fileStruct} shows its structure. In the main directory there are the following files used for compilation: \emph{CMakeLists.txt}, \emph{Makefile} and \emph{Makefile\_neon}. This section gives information on how to use these files to compile, install and run the library and the included Sample program.
+	\begin{figure}[H]
+		\caption{LinCodeWeigntInv directory}
+		\label{fileStruct}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{fileStruct}
+		\end{center}
+	\end{figure}
+
+	\section{Compilation}
+	\subsection{Setting up IDE project with CMake}
+	Compiling the library can be done using the CMake framework, which creates a project for the chosen IDE and the working operating system. To do this, the program must be installed, available \href{https://cmake.org/download/}{here}. CMake is a platform that, based on a given structure and parameters, creates a project for a selected IDE and the working operating system. These parameters are set in CMakeLists.txt files created for the current library and application program. For this purpose, the following three CMakeLists.txt files have been created:
+
+	
+	\begin{itemize}
+		\item A main file containing the name of the project, the minimum version of CMake required to create the project, and the commands showing the subdirectories where the rest of the \emph{CMakeLists.txt} files are located. This file is located in the root directory.
+		\item A file describing the structure and how to compile the library itself. This file is located in the \textbf{src} subdirectory, which also contains all the necessary source files to build the current library. The \textbf{include} subdirectory of the main directory contains the library's header files.
+		\item A file describing the structure of the attached sample program, testing programs with different instruction sets and linking to the library. This file and the source files are located in the \textbf{testProgram} subdirectory of the main directory. 
+	\end{itemize}
+
+	
+	
+	There are two main approaches to configure a IDE project - using the Graphics User Interface (GUI) or by a command in a standard terminal (typically in Unix based systems). The two main steps for configuration using the GUI are shown in fig. \ref{conf} and \ref{generate}.
+	
+		\begin{figure}[H]
+		\caption{CMake configuration step}
+		\label{conf}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{conf}
+		\end{center}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\caption{CMake generation step}
+		\label{generate}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{generate}
+		\end{center}
+	\end{figure}
+	
+	The following command can be used to configure a project for an IDE using command promt form the main directory of the library:\\
+	\textit{cmake -G <build\_system> -B <IDE\_project\_dir> -S <source\_dir>}\\
+	\textbf{Example 1:} Configuring and generating IDE project on Windows system for  Visual Studio 16 and CodeBlocks in a subfolder "msvc"\\
+	\textit{cmake -G "Visual Studio 16 2019" -B .$\backslash$ msvc -S .$\backslash$ }\\
+	\textit{cmake -G "CodeBlocks" -B .$\backslash$ msvc -S .$\backslash$ }\\
+	
+	\textbf{Example 2:} Configuring and generating IDE project on MacOS  for XCode in subdirectory "xcode"\\
+	\textit{cmake -G XCode -B ./xcode -S ./ }\\
+	
+	\textbf{Note:} The command \textit{cmake --help} will produce additional information and the available generators for the current platform.\\
+	
+	\textbf{Note:} The command \textit{cmake -D CMAKE\_C\_COMPILER=<full\_compiler\_path>} can be used before the configuration command to set a specific C compiler. Analogously, the command \textit{cmake -D CMAKE\_CXX\_COMPILER=<full\_compiler\_path>} can be used to set a specific C++ compiler. However, when working with an IDE such as Microsoft Visual Studio the authors recommend to use the default compiler.\\
+
+	\textbf{Example 3:} Setting up a specific compiler using its name (compiler path is set in \textbf{PATH}) using default generator on Unix based Operating system:\\
+	\textit{cmake -D CMAKE\_C\_COMPILER=gcc -D CMAKE\_CXX\_COMPILER=g++  -B ./ buildDir -S ./  }\\
+	
+	\subsection{Compiling with IDE}\label{compileIDE}
+	
+	In the generated project with Cmake and the chosen IDE, there are several targets that can be build (compiled). Building target \textbf{ALL\_BUILD} (it can be named differently in the chosen IDE e.g. in CodeBlocks - target \textbf{all}) will compile all executable programs. One can build a specific executable program by right-clicking on it and choosing option \emph{build}. However, they will not be able to be executed directly from the IDE. Thus, they need to be set as \emph{default starting program}. Figure \ref{xcode} shows how to set a default starting program for a xcode on macOS. Figure \ref{VS} shows how to chose a target to be build as default starting program for Microsoft Visual Studio and figure \ref{CB} shows this for CodeBlocks IDE both working on Windows 10 OS. 
+	
+		\begin{figure}
+		\caption{Setting test program as startup project (XCode)}
+		\label{xcode}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{xcode}
+		\end{center}
+	\end{figure}
+	
+		\begin{figure}
+		\caption{Setting test program as startup project (Microsoft Visual Studio)}
+		\label{VS}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{vs}
+		\end{center}
+	\end{figure}
+	
+	\begin{figure}
+		\caption{Setting test program as startup project (CodeBlocks)}
+		\label{CB}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{cb}
+		\end{center}
+	\end{figure}
+	
+
+	\subsection{Compiling on Linux OS}
+	
+	To compile the library and the  accompanying  programs on a Unix OS with default generator set as \emph{Unix Makefiles}, the following command must be executed:\\
+	\textit{cmake -B ./ -S ./\\
+	make all}\\
+	The Sample interface program and the testing programs are compiled in subdirectory \emph{build} of the chosen IDE directory. The following commands can be executed to start the Sample program: \\
+	\textit{cd build\\
+	./Test-UI}
+	
+	
+	\subsection{Compiling for AVX512}\label{compileAVX512}
+	%\textbf{Note:} 
+	When using Microsoft Visual Studio IDE on Windows OS, the user should manually set the flag to \emph{AVX512} in the  project or change it in the corresponding CMakeLists file as can be seen in the following example. The default flag compiles the library for architectures with AVX2 instruction sets since they are more widely available.
+	If the target platform has \textbf{AVX512-VPOPCNTDQ} instruction set the flag \emph{-mavx512vpopcntdq} (in comment on line 23) should be added to the flags set on line 20 in \emph{CMakeLists.txt} file in subdirectory \emph{src}. Otherwise, these instructions will not be used. 
+	
+	
+	\emph{Exapmple 4:} Flags set in \emph{CMakeLists.txt} file in subdirectory \emph{src} for use with  \textbf{AVX512-VPOPCNTDQ}.\\
+	
+	if(CMAKE\_CXX\_COMPILER\_ID STREQUAL "MSVC")\\
+	set(CMAKE\_CXX\_FLAGS "\${CMAKE\_CXX\_FLAGS} /arch:AVX512")\\
+	else()\\
+	set(CMAKE\_CXX\_FLAGS "\${CMAKE\_CXX\_FLAGS} -march=native -mavx512vpopcntdq")\\
+	endif()	\\
+	
+	
+	
+	\subsection{Compilation using the included Makefiles}
+	On a Unix-like x86 systems, the included \emph{Makefile} can be used to compile the library and the presented Sample program. If the system architecture is \emph{ARM} with NEON instruction set, the file \emph{Makefile\_neon} should be renamed to \emph{Makefile} (override the existing Makefile). Then the following commands will compile and install the library (saved in \emph{lib} subdirectory, test files will be copied in \emph{build} subdirectory) and the executable Sample program (in subdirectory \emph{build}):\\
+	\textit{make\\ make install}\\
+	
+	\subsection{Compilation using specific instruction set on x86 architecture}
+	The end user can use a specific instruction set (SSE4.1, AVX2, AVX512), different form the largest possible on the target architecture. To do this the end user should change the value of \textbf{FORCE\_INSTR} parameter in the CMakeList.txt file in subdirectory \emph{src} to one of the following: 
+	\begin{itemize}
+		\item For SSE4.1 change the value to 5
+		\item For AVX2 change the value to 8
+		\item For AVX512 without additional population count instruction set change the value to 9
+		\item For AVX512 with additional population count instruction set change the value to 11
+		\item Default value of  \textbf{FORCE\_INSTR} is 0 and it indicates to use the largest register available instruction set
+	\end{itemize}
+	This should be done before the generation of the project.
+	
+	\section{Installation}
+	The created project has the following main targets - the library, the accompanying interface program, four testing programs used for reproducing the results presented in the manuscript and the install target. Setting the test target as default will compile the library and all executable programs. The interface program will be the one that is started in the corresponding IDE. Building the install target will generate a library in the subdirectory \emph{lib} of the main directory, while the compiled sample program is in subdirectory \emph{build} of the chosen directory for the generator (IDE, Makefile, etc.). It will also copy the  test files \emph{TestDataSmall} and \emph{TestDataBig} into the build directory. On an Unix system with default generator set as \emph{Unix Makefiles} the library and the accompanying Sample program can be configured, build and installed (Makefile stored in subdirectory \emph{make}) with the following set of commands:\\
+	\textit{cmake -B ./  make -S ./\\
+	cd make\\
+	make all\\
+	make install}\\
+	   % of the main directory and the \emph{test} executable file in  subdirectory \emph{ExampleFiles}. 
+	   
+	   
+	 \subsection{Using library in personal projects}
+	There are two main ways to use the library in personal projects:
+	\begin{itemize}
+	\item By using the \emph{CMakeLists.txt} file for the sample program - replacing the source \emph{.cpp} file for the sample program with personal source \emph{.cpp} files. This negates the need to manually enter the directories for the compilation and linking processes. 
+	\item By adding the appropriate directories for the library in the personal project in the preferred  IDE. The \emph{include} directory contains the needed header files for the compilation and the \emph{lib} directory containing the library for the linking process.
+	\end{itemize}
+	
+	\textbf{Note:} The library must be compiled in the same mode and with the same compiler that will be used for the personal projects.
+%	When starting CMake, the directory where the main CMakeLists.txt file is located is selected, as well as the directory where the project will be created. The process involves two main steps - configuration and creation. Starting the configuration step selects the target IDE for which to create a project. CMake then detects the necessary files and compilers and initializes environment-related variables. It is possible that the configuration process may not complete successfully, displaying a message with the error that occurred (e.g. missing files). If no error occurred after configuration, the GUI will display some of the initialized variables along with their values. Here these  values can be changed as needed. The next step creates a project for the selected IDE, and this project will be located in the target directory. Projects for some IDEs (Microsoft Visual Studio) can be run directly from the CMake GUI. The built library will be saved in the src folder in the project directory, while the example program that uses the library will be saved in the build directory.
+%	как се инсталира\\
+%	как да се включи във външен проект
+	
+	\section{Tested platforms}
+	The \emph{LinCodeWeoghtInv} library has been tested on the platforms, given in table \ref{Platforms}:\\
+
+	\begin{table}[h]
+		\caption{Tested platforms}
+		\label{Platforms}
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				CPU & OS & Instruction set & Compiler  &  Build system or IDE\\
+				\hline
+				\hline
+				Intel Xeon Gold & Red Hat Enterprise 7.9 & AVX512 F/BW & gcc 9.2 & Makefile\\
+				 5118 @2.36GHz & & & & \\
+				\hline 
+				Intel Core  & Windows 11 Pro & AVX2 & gcc 10.3 & CodeBlocks 20.03\\
+				i5-13600K @3.5GHz &  &  & msvc 19.37.32724 &  Visual Studio Community 17\\
+				\hline
+				Intel Core  & Windows 10 Pro &  AVX512 F/BW/ & gcc 8.1 & CodeBlocs 20.03\\
+				i5-1035G @1.0GHz &  & VPOPCNTDQ &  msvc 19.29.30146 & Visual Studio Community 16\\
+				\hline
+				Intel Xeon &  Ubuntu 18.04 & SSE4.2 & gcc 7.5 & Makefile\\
+				E5-2640 @2.5GHz & & & & CodeBlocks 20.03 \\
+				\hline
+				AMD Ryzen 5 &  Windows 11 Home & AVX512 F/BW/ & gcc 8.1 & CodeBlocks 20.03\\
+				7600 @3.8GHz &	&  VPOPCNTDQ& msvc 19.39.33523 &  Visual Studio Community 17\\
+				\hline
+				Apple M1 @3.2 GHz & macOS Sonoma 14.1.2 & NEON & clang 15.0.0 & Xcode 15.0.2\\
+				\hline
+				Cortex-A76  & Ubuntu Server 24.04 & NEON & clang 18.1.3 &  Makefile\\
+				(emulated with qemu) & (arm64)& & & \\
+				\hline
+			
+			\end{tabular}
+		\end{center}
+	\end{table}

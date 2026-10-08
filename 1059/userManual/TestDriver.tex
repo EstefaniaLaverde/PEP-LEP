@@ -1,0 +1,270 @@
+	%\section{Sample and testing executable programs}
+	The software package includes a Sample program with simple interface and a set of executable programs that execute a single function for a specific instruction set. All of the including programs must be firstly compiled (see Chapter \ref{CompilationAndInstallation}).
+	
+	
+	\section{Sample program}
+	The Sample program with source code in subdirectory \textbf{testProgram}. It presents a simple interface that allows the user to test the main functionalities. The first option gives the end user to execute calculations with input data that is stored in a file. The name of the file is read from the command prompt. Afterwords one of the six main functionalities of the library, described in \ref{_lin_code_weight_inv_8h}:\\
+	\begin{itemize}
+		\item Calculating the weight distribution of a linear code.%\ref{_lin_code_weight_inv_8h_a3db7938225e32f862d698de8df17cb5a}
+		\item Calculating the minimum distance of the code.
+		\item Searching for codeword with weight less than given value. The value is read from the command prompt. 
+		\item Searching for codeword with weight equal to given value. The value is read from the command prompt.
+		\item Calculating the number of codewords with weight less than given value. The value is read from the command prompt.
+		\item Calculating the number of codewords with weight equal to given value. The value is read from the command prompt.
+	\end{itemize}
+	Figures \ref{filedPrime},\ref{fileComposite}and \ref{compMult16} show the structure of the data in the input file. An error occurs if the input data (generator matrix, code parameters) are not in the appropriate format in the input file. A row that starts with \emph{"?"} shows that the element of the field are represented using the index of the element of the field (decimal representation). Afterwords, the parameters $k$, $n$ and $q$ are given. The last number is the current code for which the calculations are executed. The generator matrix is given in the next rows. If a row starts with \emph{"!"}, then the elements of the field are displayed in multiplicative form. 
+		\begin{figure}[H]
+		\caption{File structure for $q<10$ and decimal representation of the elements of the field}
+		\label{filedPrime}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{filePrime}
+		\end{center}
+	\end{figure}
+	\begin{figure}[H]
+		\caption{File structure for $q>10$ and decimal representation of the elements of the field}
+		\label{fileComposite}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{fileComposite}
+		\end{center}
+	\end{figure}
+		\begin{figure}[H]
+		\caption{File structure for $q>10$ and multiplicative representation of the elements of the field}
+		\label{compMult16}
+		\begin{center}
+			\includegraphics[width=0.75\textwidth]{compMult16}
+		\end{center}
+	\end{figure}
+	
+	
+	
+	The second option is to run calculation for a randomly generated linear code. The values for the parameters of the code $n$, $k$ and $q$ are read form the command prompt. Then the user chooses which calculations form the above to be executed. \\
+	The last option of the presented sample program is to execute the so called \emph{"testDriver"} function. It allows for the testing of all functions of the LinCodeWeightInv library for correctness and  runtime testing. The  \emph{"testDriver"} consists of two parts - data generation and testing functionality. The first is preliminary and it is not executes by calling the \emph{"testDriver"} function. It concerns the generation of test data. We have created several files that contain codes with randomly generated parameters over each of the considered finite fields, and 100 randomly generated codes for each of the parameters. In addition to the generator matrices of the codes, the files also contain pre-calculated weight distributions with other software that uses a Gray code. This procedure (of generator matrices and weight distributions) is repeated several times (say 3). We have created two such files (\emph{Test} and \emph{TestDataRes\_big}) according to the maximum number of codewords in each of the codes (\emph{Test} contains codes with smaller dimensions than \emph{TestDataRes\_big} – the reason is to have test data that can be checked faster). These files have the following structure: parameters of the code, presented as in Figures \ref{filedPrime} and \ref{fileComposite}, generator matrix and weight distribution $\{A_i\}$ for $i = 0, \dots, n$. For a given set of parameters we have a 100 codes presented by their generator matrices with computed weight distributions. 
+	
+	
+	%The second part of the library testing program consists of the correctness and runtime testing itself. 
+	The Sample program also includes a test drive option. It reads a generator matrix and a weight distribution from the previously prepared files, and then tests the correctness of each of the functions and the execution time (respectively, the average time for the hundred codes with the same parameters), saving the results to a separate file. We only test the correctness of the calculations and the execution time. The interface allows the user to choose with which instruction set to test the library - SSE4.1, AVX2, AVX512 or without the use of vectorization. If an ARM architecture with NEON instruction set is detected, an appropriate message is displayed. Figure \ref{TestUI} shows the console look of Sample program with the input using "Test Driver" option.
+	
+	\begin{figure}[H]
+	\caption{Example of console input in the Sample program using "Test Driver" option}
+	\label{TestUI}
+	\begin{center}
+		\includegraphics[width=0.75\textwidth]{TestUI-example}
+	\end{center}
+	\end{figure}
+	
+	
+	
+	 The following is the source code of the Sample program:
+	\begin{small}
+			\begin{verbatim}
+			#include <time.h>
+			#include <iostream>
+			#include <fstream>
+			#include <stdio.h>
+			#include <string.h>
+			#include "testDriver.h"
+			#include "LinCodeWeightInv.h"
+			using namespace std;
+			int main(int argc, char** argv) {
+				int flag = 0;
+				int k = 3 , n = 500, q = 25, w_searched = 480, count = 0;
+				unsigned long long int d = 0;
+				bool found = false, multiplicative = false, write_CW = true;
+				
+				char write_in_file = false;
+				while (flag!=4) {
+					printf("Please choose the input data:\n");
+					printf("1. Reading generator matrix from file\n");
+					printf("2. Generating random linear code\n");
+					printf("3. Test functionalities\n");
+					printf("4. Exit\n");
+					cin >> flag;
+					if (flag == 1) {
+						cout << "Enter file name: ";
+						string in = "";
+						char* fileName;
+						cin >> in;
+						fileName = new char[in.length() + 1];
+						strcpy(fileName, in.c_str());
+						int num_of_input = 0;
+						int function = 0;
+						while (function < 7) {
+							printf("Please choose an option:\n");
+							printf("1 Calculating weight spectrum\n");
+							printf("2 Calculating minimum distance of code\n");
+							printf("3 Searching for word with weight less than:\n");
+							printf("4 Searching for word with weight equal to:\n");
+							printf("5 Calculating number of words with weight less than:\n");
+							printf("6 Calculating number of words with weight equal to\n");
+							printf("7 Back\n");
+							cin >> function;
+							switch (function) {
+								case 1:
+								calculateWeightDistribution(fileName);
+								break;
+								case 2:
+								min_dis(fileName);
+								break;
+								case 3:
+								cout << "Enter searched weight: ";
+								cin >> w_searched;
+								find_word_less_than_fixed_weight(fileName, w_searched);
+								break;
+								case 4:
+								cout << "Enter searched weight: ";
+								cin >> w_searched;
+								find_word_equal_to_fixed_weight(fileName, w_searched);
+								break;
+								case 5:
+								cout << "Enter searched weight: ";
+								cin >> w_searched;
+								write_in_file = false;
+								printf("Do you want to write the codewords in file?(y/n)\n");
+								cin >> write_in_file;
+								if (write_in_file == 'Y' || write_in_file == 'y') {
+									calculate_number_of_words_less_than_fixed_w(fileName, w_searched, true);
+								}
+								else {
+									calculate_number_of_words_less_than_fixed_w(fileName, w_searched, false);
+								}
+								break;
+								case 6:
+								cout << "Enter searched weight: ";
+								cin >> w_searched;
+								printf("Do you want to write the codewords in file?(y/n)\n");
+								cin >> write_in_file;
+								if (write_in_file == 'Y' || write_in_file == 'y') {
+									calculate_number_of_words_with_fixed_w(fileName, w_searched, true);
+								}
+								else {
+									calculate_number_of_words_with_fixed_w(fileName, w_searched, false);
+								}
+								break;
+								case 7:
+								break;
+								default:
+								printf("Wrong input\n");
+								break;
+							}
+						}
+					}
+					else if (flag == 2) {
+						cout << "Enter values for n,k,q" << endl;
+						cin >> n >> k >> q;
+						int function = 0;
+						printf("Please choose an option:\n");
+						printf("1 Calculating weight spectrum\n");
+						printf("2 Calculating minimum distance of code\n");
+						printf("3 Searching for word with weight less than:\n");
+						printf("4 Searching for word with weight equal to:\n");
+						printf("5 Calculating number of words with weight less than:\n");
+						printf("6 Calculating number of words with weight equal to\n");
+						cin >> function;
+						switch (function) {
+							case 1:
+							calculateWeightDistribution(n, k, q);
+							for (int i = 1; i <= n; i++) {
+								if (weights[i] > 0) {printf("%d^%llu ", i, weights[i]);}
+							}
+							printf("\n");
+							break;
+							case 2:
+							d = min_dis(n, k, q);
+							printf("d = %d\n", d);
+							break;
+							case 3:
+							cout << "Enter searched weight: ";
+							cin >> w_searched;
+							found = find_word_less_than_fixed_weight(n, k, q, w_searched);
+							if (found) {printf("Found a word with weight less than %d\n", w_searched);}
+							else {printf("Did NOT find a word with weight less than %d\n", w_searched);	}
+							break;
+							case 4:
+							cout << "Enter searched weight: ";
+							cin >> w_searched;
+							found = find_word_equal_to_fixed_weight(n, k, q, w_searched);
+							if (found) {printf("Found a word with weight = %d\n", w_searched);}
+							else {printf("Did NOT find a word with weight = %d\n", w_searched);}
+							break;
+							case 5:
+							cout << "Enter searched weight: ";
+							cin >> w_searched;
+							write_in_file = false;
+							printf("Do you want to write the codewords in file?(y/n)\n");
+							cin >> write_in_file;
+							if (write_in_file == 'Y' || write_in_file == 'y') {
+								unsigned long long int num = 
+								calculate_number_of_words_less_than_fixed_w(n, k, q, w_searched, true);
+								printf("Found %d words with weight less than %d\n", num, w_searched);}
+							else {
+								unsigned long long int num = 
+								calculate_number_of_words_less_than_fixed_w(n, k, q, w_searched, false);
+								printf("Found %d words with weight less than %d\n", num, w_searched);}
+							break;
+							case 6:
+							cout << "Enter searched weight: ";
+							cin >> w_searched;
+							write_in_file = 'n';
+							printf("Do you want to write the codewords in file?(y/n)\n");
+							cin >> write_in_file;
+							if (write_in_file == 'Y' || write_in_file == 'y') {
+								unsigned long long int num = 
+								calculate_number_of_words_with_fixed_w(n, k, q, w_searched, true);
+								printf("Found %d words with weight = %d\n", num, w_searched);	}
+							else {
+								unsigned long long int num = 
+								calculate_number_of_words_with_fixed_w(n, k, q, w_searched, false);
+								printf("Found %d words with weight = %d\n", num, w_searched);}
+							break;
+							default:
+							printf("Wrong input\n");
+							break;}}
+					else if(flag == 3){test_drive();}
+					else if (flag == 4) {break;	}
+					else {printf("Not an option\n\nPlease choose again\n");}
+					printf("\n\n\n");	}
+				return 0;
+			}
+			
+		\end{verbatim}
+	\end{small}
+
+
+	\section{Testing executable programs}
+	In order to test all functionalities with the exact input data used in the accompanying article, we have developed additional functions and corresponding executable programs. There are 24 programs that can be compiled and executed (see Section \ref{compileIDE} ). The input data is stored in the file  \emph{ArticleData}. Manual input is not needed for the execution of these programs. The input file contains codes for seven finite fields, fixed dimension for each field and lengths 60 and 500. For each set of parameters, there are 100 randomly generated codes and their weight distribution. The output of the testing programs contains the average execution time of the function for each set of 100 codes with the same parameters and the total execution time. The results are written in a file with the name \emph{Results\_<FunctionName>\_<InstructionSet>}, where \emph{FunctionName} shows the used functions and \emph{<InstructionSet>} gives information about the desired instruction set that is going to be used. The searching and counting functions write the codewords, that were found in a separate file. If an error occurs during the execution, information about it will be written in a text file \emph{error.txt} and the program will end with code \textbf{1}. For example, when executing the program \emph{test512\_WeightDistribution} on an architecture with AVX512 register set and default setting (see \ref{compileAVX512} ), the following message will be written in the \emph{error.txt} file:
+	
+	
+	\emph{AVX512 instructions were detected on CPU, but the corresponding compiler flag was not used! If working on Visual Studion, please change compiler flag at line 18 in CMakeLists.txt file in src directory to /arch:AVX512, or manually change the flags for project v1.3! Otherwise, please change the flag to  -march=skylake-avx512 in line 20 in the same in CMakeLists.txt file in src directory.}
+	
+	
+	Table \ref{ExecTimes} gives the names of the executable testing programs, the names of the output files, and total execution time in seconds. The computations are executed on platform with Linux OS, Intel Core i5-1035G CPU and g++ 13.3.0.
+		\begin{table}[h]
+		\caption{Execution times for functions calculating the weight distribution and searching for codewords with given weight}
+		\label{ExecTimes}
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				Testing program & Instruction set & Output file & Total time\\
+				\hline \hline
+				test128\_WeightDistribution & SSE4.1 & Results\_WeightDistribution\_SSE & 2 h. 10 min. \\ 
+				\hline
+				test256\_WeightDistribution & AVX2 & Results\_WeightDistribution\_AVX & 2 h. 9 min. \\
+				\hline
+				test512\_WeightDistribution & AVX512 & Results\_WeightDistribution\_AVX512 & 1 h. 13 min.  \\
+				\hline
+				testScalar\_WeightDistribution & no vectorization & Results\_WeightDistribution\_Scalar & 2 d. 6 h. 37 min. \\
+				\hline\hline
+				test128\_SearchEqual & SSE4.1 & Results\_SearchEqual\_SSE & 5 h. 15 min. \\
+				\hline
+				test256\_SearchEqual & AVX2 & Results\_SearchEqual\_AVX & 5 h. 23 min.\\
+				\hline
+				test512\_SearchEqual & AVX512 & Results\_SearchEqual\_AVX512 & 3 h. 2 min. \\
+				\hline
+				testScalar\_SearchEqual & no vectorization & Results\_SearchEqual\_Scalar & 5 d. 5 h. 57 min. \\
+				\hline
+			\end{tabular}
+		\end{center}
+	\end{table}
+	
+	
+

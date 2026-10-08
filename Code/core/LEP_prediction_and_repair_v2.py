@@ -16,19 +16,58 @@ turns it into (a) an entrywise posterior table, (b) a monomial approximation
 Q_hat of the secret Q, and (c) prediction-and-repair procedures that use
 Q_hat to recover equivalent codeword pairs (v, w) with v in C, w in C'.
 
-Implements Algorithms 1-12:
-    - Algorithm 1  : PredictionAndRepairFramework
-    - Algorithm 2  : RowScore
-    - Algorithm 3  : ScoreToCost
-    - Algorithm 4  : HungarianAssignment
-    - Algorithm 5  : MonomialApproximation
-    - Algorithm 6  : InducedSDRepair
-    - Algorithm 7  : BuildActiveRowLists
-    - Algorithm 8  : StructuredSDRepair
-    - Algorithm 9  : MarginalErrorRegion
-    - Algorithm 10 : AssignmentConsistentErrorRegion (simplified)
-    - Algorithm 11 : MinimumOverlapSampler
-    - Algorithm 12 : PosteriorAwarePrangeRepair
+compute_posterior_table_list_based is the one exception: it builds the same
+entrywise posterior table (a), but from the list-based leakage produced by
+generate_noisy_LCE_instance_CBA_bit_flip_lists_version
+(instances_generator_monomial_as_list.py) instead of from a whole-matrix
+hint - see its own docstring, and
+strategies/07_list_based_prediction_and_repair/list_based_posterior_pseudocode.md,
+for why this needed a dedicated construction rather than reusing
+compute_posterior_table on a reconstructed matrix. Steps (b) and (c) are
+unchanged either way: they only ever consume the abstract
+table[i][j] = {a: p_ij(a)} shape, from whichever of the two functions built it.
+
+Implements most of Algorithms 1-14 from the paper's current numbering (the
+professor-suggested Two-Vector Model split MonomialApproximation into two
+algorithms - Algorithm 5 for the decoupled two-vector case and Algorithm 6
+for the full-matrix case - which shifted every algorithm after it up by one
+relative to older comments/notes in this codebase; the mapping below is
+current as of that split):
+    - Algorithm 1  : PredictionAndRepairFramework    -> prediction_and_repair_framework
+    - Algorithm 2  : RowScore                        -> row_score / compute_row_scores
+    - Algorithm 3  : ScoreToCost                      -> score_to_cost
+    - Algorithm 4  : HungarianAssignment              -> hungarian_assignment
+    - Algorithm 5  : MonomialApproximationVector       -> monomial_approximation_vector
+                     (two-vector / list-based model - see compute_vector_posteriors_list_based)
+    - Algorithm 6  : MonomialApproximation            -> monomial_approximation
+                     (full-matrix / entrywise model)
+    - Algorithm 7  : InducedSDRepair                  -> induced_sd_repair
+    - Algorithm 8  : BuildActiveRowLists              -> build_active_row_lists
+    - Algorithm 9  : StructuredSDRepair               -> structured_sd_repair
+    - Algorithm 10 : PosteriorRepairRadius            -> lives in posterior_repair_radius.py,
+                     not in this file
+    - Algorithm 11 : MarginalErrorRegion              -> marginal_error_region
+    - Algorithm 12 : AssignmentConsistentErrorRegion  -> NOT implemented in this codebase
+                     (marginal_error_region is the simpler row-wise selector only)
+    - Algorithm 13 : MinimumOverlapSampler            -> minimum_overlap_sampler
+    - Algorithm 14 : PosteriorAwarePrangeRepair       -> posterior_aware_prange_repair
+
+Also implements two functions that build the entrywise-shaped posterior
+table (a) from list-based leakage - an alternative to feeding
+monomial_approximation_vector (Algorithm 5) directly - for reusing
+monomial_approximation (Algorithm 6) unchanged on list-based instances:
+    - compute_posterior_table_list_based
+
+NOTE: compute_posterior_table_list_based + monomial_approximation is NOT
+equivalent to compute_vector_posteriors_list_based + monomial_approximation_vector.
+Folding the two independent list posteriors into a single entrywise table and
+reusing Algorithm 6's RowScore reintroduces a column-dependent zero-entry
+background term that has no counterpart in the paper's Two-Vector Model
+(Section 3.5.2 / 5.5) - see the comment above monomial_approximation_vector
+for the full argument. Use monomial_approximation_vector (Algorithm 5) for a
+MAP estimate that matches the two-vector posterior model the paper proves
+optimal (Proposition 1); compute_posterior_table_list_based is kept for
+backward compatibility / comparison with the earlier approach.
 
 Using SageMath.
 """
@@ -148,6 +187,68 @@ def build_bit_channel_matrix(q, alpha, beta):
     return channel
 
 
+def build_bit_channel_matrix_exact(q, alpha, beta):
+    """
+    Thesis-exact bitwise posterior channel (Section 2.3 "A General Posterior
+    Leakage Model" + the asymmetric bit-channel instantiation in the leakage
+    model chapter): Pr[observe the RAW bit string y | true value x], for
+    every candidate x in [0, q) and every one of the l = 2**bits_needed
+    possible raw observed bit strings y, with NO reduction of y modulo q.
+
+    This is deliberately different from build_bit_channel_matrix above,
+    which folds every y into a bucket h = y % q before the table is used,
+    i.e. it pools the likelihood of several distinct raw observations into
+    one number per (x, h) pair. The thesis's own formula for p_{i,j}(a) (and
+    its two-vector counterparts p^perm_i, p^scale_i) is
+
+        p(a) \propto alpha**N01(a) * (1 - alpha)**N00(a)
+                      * beta**N10(a) * (1 - beta)**N11(a),      a in X,
+
+    where N_{uv}(a) counts the bit positions where a's own encoding is u and
+    the OBSERVED bits are v, and the normalization ranges only over the
+    valid candidates a in X (the q field elements, or q - 1 nonzero ones, or
+    n column indices) - never over the 2**bits_needed possible bit strings.
+    An observed code that happens to fall outside [0, q) (when q is not a
+    power of two) is not "folded" into some other value's probability: it
+    is simply the one concrete bit string being compared, bit by bit,
+    against every valid candidate's own encoding; no candidate ever needs
+    to be discarded or merged with another.
+
+    Usage: index this table with the RAW leaked integer (as produced by
+    generate_bit_channel_hint_for_list, already masked into
+    [0, 2**bit_width - 1] but otherwise unreduced) - do NOT take "% q" (or
+    "% n") of the observation before using it here, since doing so would
+    silently fall back to the pooled, non-thesis-exact model that
+    build_bit_channel_matrix implements.
+
+    :param q: size of the candidate universe (q for field elements/columns,
+        or any other modulus used as a candidate-set size - the function is
+        generic in this argument, exactly like build_bit_channel_matrix)
+    :param alpha: probability that a 1 bit flips to 0
+    :param beta: probability that a 0 bit flips to 1
+    :return: a q x l list of lists, channel[x][y] = Pr[observe raw y | x],
+        for x in [0, q) and y in [0, l), l = 2**bits_needed
+    """
+    bits_needed = 0
+    while (1 << bits_needed) < q:
+        bits_needed += 1
+    l = 1 << bits_needed
+
+    channel = [[0.0 for _ in range(l)] for _ in range(q)]
+    for x in range(q):
+        bx = _bits_msb_first(x, bits_needed)
+        for y in range(l):
+            by = _bits_msb_first(y, bits_needed)
+
+            p_y_given_x = 1.0
+            for bxi, byi in zip(bx, by):
+                p_y_given_x *= _bit_transition_prob(bxi, byi, alpha, beta)
+
+            channel[x][y] = p_y_given_x
+
+    return channel
+
+
 def _row_prior(F, n, is_permutation):
     """
     Computes the entrywise prior Pr[Q_ij = a] induced by the row structure
@@ -221,6 +322,178 @@ def compute_posterior_table(hint, alpha, beta, is_permutation=False):
                 table[i][j] = prior
             else:
                 table[i][j] = {a: unnormalized[a] / total for a in F}
+        if VERBOSE and n >= 32 and (i + 1) % max(1, n // 10) == 0:
+            _vprint(f" row {i + 1}/{n}", end='', flush=True)
+
+    _vprint(f" done ({time.time() - t0:.2f}s)", flush=True)
+    return table
+
+
+def compute_posterior_table_exact(raw_hint, n, q, alpha, beta, is_permutation=False):
+    """
+    Thesis-exact counterpart of compute_posterior_table for the matrix
+    representation: builds the SAME n x n x q shaped posterior table
+    p_ij(a) = Pr[Q_ij = a | hint], but from a RAW (unreduced) leaked hint
+    - a plain n x n nested list/matrix of Python ints in
+    [0, 2**ceil(log2(q)) - 1], exactly as generate_bit_channel_hint
+    produces, BEFORE any coercion into GF(q) - and scores every candidate
+    directly against that raw observation via build_bit_channel_matrix_exact,
+    with no modulo folding, matching Section 2.3's
+    p(a) \propto alpha^N01(a) (1-alpha)^N00(a) beta^N10(a) (1-beta)^N11(a)
+    formula exactly (see that function's docstring).
+
+    Why this needs its own function rather than changing
+    compute_posterior_table in place: compute_posterior_table is still the
+    right tool for a hint that has ALREADY been reduced into GF(q) by
+    construction - e.g. list_based_row_domains' "naive" reconstruction
+    baseline (build_leaked_monomial_matrix), which deliberately wraps noisy
+    permutation indices modulo n and reduces noisy values into GF(q) as
+    part of being the cruder, lossy comparison point. For such a hint, the
+    pooled build_bit_channel_matrix is the CORRECT, self-consistent channel
+    (it exactly represents "Pr[observed value, after mod reduction, is
+    h]"), and switching it to the exact/unfolded table would silently
+    under-count likelihood, since the observation has already lost the
+    information the exact formula needs. This function is for the other
+    case: a hint that still carries the raw, unreduced leaked integer,
+    where the thesis's formula applies directly and no such reduction
+    should happen at all.
+
+    :param raw_hint: the RAW noisy hint, an n x n nested list (or any
+        structure indexable as raw_hint[i][j]) of plain Python ints, each
+        in [0, 2**ceil(log2(q)) - 1] - NOT reduced modulo q, and NOT a
+        Sage GF(q) matrix (see generate_bit_channel_hint)
+    :param n: degree of the monomial (size of the hint)
+    :param q: size of the finite field
+    :param alpha: probability that a 1 bit flips to 0
+    :param beta: probability that a 0 bit flips to 1
+    :param is_permutation: whether hint encodes a PEP secret (values in {0,1})
+    :return: an n x n list of dicts, table[i][j] = {a: p_ij(a) for a in Fq},
+        in exactly the format compute_posterior_table produces
+    """
+    F = GF(q)
+
+    _vprint(f"      [posterior_exact] building n={n} x n={n} table (q={q})...",
+            end='', flush=True)
+    t0 = time.time()
+
+    prior = _row_prior(F, n, is_permutation)
+    channel = build_bit_channel_matrix_exact(q, alpha, beta)
+
+    table = [[None for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            h_obs = int(raw_hint[i][j])
+            unnormalized = {}
+            for a in F:
+                x = int(a)
+                unnormalized[a] = prior[a] * channel[x][h_obs]
+
+            total = sum(unnormalized.values())
+            if total == 0:
+                table[i][j] = prior
+            else:
+                table[i][j] = {a: unnormalized[a] / total for a in F}
+        if VERBOSE and n >= 32 and (i + 1) % max(1, n // 10) == 0:
+            _vprint(f" row {i + 1}/{n}", end='', flush=True)
+
+    _vprint(f" done ({time.time() - t0:.2f}s)", flush=True)
+    return table
+
+
+def compute_posterior_table_list_based(noisy_permutation, noisy_values, n, q, alpha, beta,
+                                        is_permutation=False):
+    """
+    List-based counterpart of compute_posterior_table (Section 2.3 / Section 4.1, provisional
+    Algorithm 13). Builds the SAME n x n x q shaped BBLM posterior table p_ij(a) = Pr[Q_ij = a
+    | observation], but from the two independently-leaked lists produced by
+    generate_noisy_LCE_instance_CBA_bit_flip_lists_version (noisy_permutation, noisy_values)
+    instead of from a single whole-matrix hint.
+
+    Why this needs its own function rather than reusing compute_posterior_table on a
+    reconstructed matrix: the permutation list and the values list are each leaked through
+    their OWN bitwise channel (bit width ceil(log2(n)) for the permutation, ceil(log2(q)) for
+    the values - see instances_generator_monomial_as_list.py), so a single cell (i, j) of the
+    monomial is really the AND of two independent observations - "does row i's leaked
+    permutation index land on column j" and "what value did row i's leaked coefficient take" -
+    not one q-ary observation of the cell itself. Reconstructing the full matrix first
+    (build_leaked_monomial_matrix) and feeding that into compute_posterior_table would treat
+    those two observations as a single q-ary one and silently discards the permutation
+    channel's information whenever the reconstructed cell happens to land on 0. Row i's
+    posterior instead factorizes exactly (given the same per-row-independence approximation
+    the existing framework already makes) as
+
+        p_ij(a) = Pr[permutation_i = j | noisy_permutation_i] * Pr[values_i = a | noisy_values_i]   for a != 0
+        p_ij(0) = 1 - Pr[permutation_i = j | noisy_permutation_i]
+
+    because permutation_i and values_i are independent a priori (row_prior factorizes the
+    same way) and are leaked through independent channels. Everything downstream of this
+    function (compute_row_scores, hungarian_assignment, monomial_approximation, and the whole
+    repair stage) is unaffected - it only ever consumes the abstract table[i][j] = {a: p_ij(a)}
+    shape produced here, never the raw hint again.
+
+    :param noisy_permutation: list of n leaked permutation indices (output of
+        generate_bit_channel_hint_for_list on the true permutation list), RAW bit-flip
+        observations in [0, 2**ceil(log2(n)) - 1] - used directly, with NO reduction modulo
+        n, since build_bit_channel_matrix_exact scores every candidate column against this
+        exact observed bit string (Section 2.3's posterior formula never reduces the
+        observation; it only ever restricts the CANDIDATES to the valid ones)
+    :param noisy_values: list of n leaked diagonal values (output of
+        generate_bit_channel_hint_for_list on the true values list), RAW bit-flip
+        observations in [0, 2**ceil(log2(q)) - 1] - used directly, with NO reduction modulo
+        q, for the same reason
+    :param n: degree of the monomial (and length of both lists)
+    :param q: size of the finite field
+    :param alpha: probability that a 1 bit flips to 0
+    :param beta: probability that a 0 bit flips to 1
+    :param is_permutation: whether the secret is a PEP permutation (values fixed to 1) rather
+        than an LEP monomial
+    :return: an n x n list of dicts, table[i][j] = {a: p_ij(a) for a in Fq}, in exactly the
+        format compute_posterior_table produces
+    """
+    F = GF(q)
+
+    _vprint(f"      [posterior_list] building n={n} x n={n} table (q={q}) from lists...",
+            end='', flush=True)
+    t0 = time.time()
+
+    # Two SEPARATE channels, built with the thesis-exact (unfolded) construction: every
+    # candidate (column j, or field element a) is scored directly against the RAW observed
+    # bit string, exactly as Section 2.3's p(a) \propto alpha^N01 (1-alpha)^N00 beta^N10
+    # (1-beta)^N11 formula specifies - see build_bit_channel_matrix_exact's docstring for why
+    # this differs from the (pooled, non-thesis) build_bit_channel_matrix.
+    channel_n = build_bit_channel_matrix_exact(n, alpha, beta)
+    channel_q = build_bit_channel_matrix_exact(q, alpha, beta)
+
+    table = [[None for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        h_obs = int(noisy_permutation[i])
+        v_obs = int(noisy_values[i])
+
+        # Column posterior: Pr[permutation_i = j | h_obs], for every candidate column j.
+        # The row prior here is uniform over the n columns (1/n each), so it cancels out of
+        # the normalization and does not need to appear explicitly (unlike _row_prior, whose
+        # column-uniform part is likewise a constant factor).
+        col_raw = [channel_n[j][h_obs] for j in range(n)]
+        col_total = sum(col_raw)
+        col_post = [c / col_total for c in col_raw] if col_total > 0 else [1 / n] * n
+
+        # Value posterior: Pr[values_i = a | v_obs], for every nonzero field element a.
+        if is_permutation:
+            val_post = {F(1): 1.0}
+        else:
+            val_raw = {a: channel_q[int(a)][v_obs] for a in F if a != F(0)}
+            val_total = sum(val_raw.values())
+            if val_total > 0:
+                val_post = {a: val_raw[a] / val_total for a in val_raw}
+            else:
+                val_post = {a: 1 / (q - 1) for a in val_raw}
+
+        for j in range(n):
+            row_j = {F(0): 1.0 - col_post[j]}
+            for a, p in val_post.items():
+                row_j[a] = col_post[j] * p
+            table[i][j] = row_j
+
         if VERBOSE and n >= 32 and (i + 1) % max(1, n // 10) == 0:
             _vprint(f" row {i + 1}/{n}", end='', flush=True)
 
@@ -380,6 +653,191 @@ def monomial_approximation(posterior_table, F):
 
 
 # ---------------------------------------------------------------------------
+# Section 5.5 / Algorithm 5: MonomialApproximationVector (Two-Vector Model)
+#
+# Dedicated reconstruction for the list-based (permutation, values) leakage,
+# following the paper's decoupled Two-Vector Model exactly, rather than
+# routing the two lists through compute_posterior_table_list_based's
+# entrywise-table reduction and reusing monomial_approximation (Algorithm 6
+# in the current paper numbering - see the note at the top of this file).
+#
+# That reduction is NOT equivalent to this algorithm: folding the two
+# independent posteriors into an entrywise table p_ij(a) and then reusing
+# RowScore/Algorithm 6 reintroduces a zero-entry background term
+# (Z_i - log p_ij(0)) that depends on the column j through
+# p_ij(0) = 1 - p_i^perm(j). That term has no counterpart in the Two-Vector
+# Model: because pi(i) and d_i are leaked through independent channels with
+# no cross-terms (Section 3.5.2), the joint posterior
+#   Pr[(pi, d) | L] ~= prod_i p_i^perm(pi(i)) * prod_i p_i^scale(d_i)
+# decouples exactly, with no "entry is zero" concept to marginalize over at
+# all (every row of a monomial matrix has exactly one nonzero entry, by
+# construction of (pi, d) - unlike the whole-matrix leakage model, where the
+# n(n-1) zero positions are genuinely, independently observed). Using this
+# function instead of monomial_approximation on a list-based instance keeps
+# the MAP estimate faithful to Proposition 1's optimality claim for the
+# two-vector posterior model, instead of silently optimizing a different
+# (entrywise-style) objective under a name that suggests it's the same one.
+# ---------------------------------------------------------------------------
+
+def compute_vector_posteriors_list_based(noisy_permutation, noisy_values, n, q, alpha, beta,
+                                          is_permutation=False):
+    """
+    Builds the two-vector BBLM posteriors p_i^perm(j) = Pr[pi(i) = j | L_pi] and
+    p_i^scale(a) = Pr[d_i = a | L_d] directly from the two leaked lists (Section 3.5.2 /
+    Section 5.5), WITHOUT recombining them into a single entrywise table. This is the
+    input Algorithm 5 (monomial_approximation_vector) expects, and is the vector-model
+    counterpart of compute_posterior_table_list_based: that function deliberately builds
+    the same n x n x q entrywise SHAPE that compute_posterior_table produces so it can be
+    fed into the existing Algorithm 6 pipeline unchanged; this function instead keeps the
+    permutation and scale posteriors separate, exactly as Section 3.5.2 defines them, for
+    the dedicated Algorithm 5 reconstruction below.
+
+    Candidates are restricted to the valid domains X_perm = {1, ..., n} (returned here
+    0-indexed as {0, ..., n-1}) and X_scale = F_q* (Section 5.5.1) simply by construction -
+    p_perm[i] only ever has keys in range(n) and p_scale[i] only ever has keys in F \\ {0} -
+    so no candidate outside either domain can ever be selected downstream; there is no
+    separate truncation step to apply.
+
+    :param noisy_permutation: list of n leaked permutation indices (see
+        generate_bit_channel_hint_for_list), RAW bit-flip observations in
+        [0, 2**ceil(log2(n)) - 1] - used directly, with NO reduction modulo n (see
+        build_bit_channel_matrix_exact's docstring for why)
+    :param noisy_values: list of n leaked diagonal values, RAW bit-flip observations in
+        [0, 2**ceil(log2(q)) - 1] - used directly, with NO reduction modulo q
+    :param n: degree of the monomial (and length of both lists)
+    :param q: size of the finite field
+    :param alpha: probability that a 1 bit flips to 0
+    :param beta: probability that a 0 bit flips to 1
+    :param is_permutation: whether the secret is a PEP permutation (values fixed to 1)
+        rather than an LEP monomial
+    :return: a tuple (p_perm, p_scale):
+        - p_perm: list of n dicts, p_perm[i] = {j: Pr[pi(i) = j | L_pi]} for j in range(n)
+        - p_scale: list of n dicts, p_scale[i] = {a: Pr[d_i = a | L_d]} for a in F, a != 0
+    """
+    F = GF(q)
+
+    _vprint(f"      [vector_posteriors] building n={n} vector posteriors (q={q}) from lists...",
+            end='', flush=True)
+    t0 = time.time()
+
+    # Same two independent channels compute_posterior_table_list_based builds - the
+    # thesis-exact (unfolded) construction, scoring every candidate directly against the
+    # raw observed bit string (see build_bit_channel_matrix_exact's docstring).
+    channel_n = build_bit_channel_matrix_exact(n, alpha, beta)
+    channel_q = build_bit_channel_matrix_exact(q, alpha, beta)
+
+    p_perm = [None] * n
+    p_scale = [None] * n
+
+    for i in range(n):
+        h_obs = int(noisy_permutation[i])
+        v_obs = int(noisy_values[i])
+
+        col_raw = [channel_n[j][h_obs] for j in range(n)]
+        col_total = sum(col_raw)
+        p_perm[i] = ({j: col_raw[j] / col_total for j in range(n)} if col_total > 0
+                      else {j: 1 / n for j in range(n)})
+
+        if is_permutation:
+            p_scale[i] = {F(1): 1.0}
+        else:
+            val_raw = {a: channel_q[int(a)][v_obs] for a in F if a != F(0)}
+            val_total = sum(val_raw.values())
+            p_scale[i] = ({a: val_raw[a] / val_total for a in val_raw} if val_total > 0
+                           else {a: 1 / (q - 1) for a in val_raw})
+
+        if VERBOSE and n >= 32 and (i + 1) % max(1, n // 10) == 0:
+            _vprint(f" row {i + 1}/{n}", end='', flush=True)
+
+    _vprint(f" done ({time.time() - t0:.2f}s)", flush=True)
+    return p_perm, p_scale
+
+
+def monomial_approximation_vector(p_perm, p_scale, F):
+    """
+    Algorithm 5 (MonomialApproximationVector). Builds the monomial MAP estimate Q_hat
+    directly from the decoupled two-vector posteriors (p_perm, p_scale), under the
+    Two-Vector Model of Section 3.5.2 / 5.5 - the list-based counterpart of
+    monomial_approximation (Algorithm 6), which instead assumes the full n^2-channel
+    entrywise leakage model.
+
+    Because pi(i) and d_i are independent and leaked with no cross-terms, the joint
+    objective
+        (pi_hat, d_hat) = argmax  sum_i log p_i^perm(pi(i))  +  sum_i log p_i^scale(d_i)
+    decouples exactly into an independent per-row scalar maximization (Phase 1) and a
+    permutation assignment problem with NO zero-entry background term (Phase 2) - unlike
+    RowScore/Algorithm 6, whose score s_ij = log p_ij(d_hat_ij) + Z_i - log p_ij(0) needs
+    the background term precisely because the entrywise model observes the n(n-1) zero
+    positions directly, which the two-vector model does not (see the module-level comment
+    above this function).
+
+    :param p_perm: list of n dicts {j: Pr[pi(i) = j | L]}, from
+        compute_vector_posteriors_list_based
+    :param p_scale: list of n dicts {a: Pr[d_i = a | L]}, from
+        compute_vector_posteriors_list_based
+    :param F: the base field GF(q)
+    :return: a tuple (Q_hat, S_perm, d_hat, pi_hat):
+        - Q_hat: the n x n monomial approximation matrix (Phase 3: Matrix Assembly)
+        - S_perm: the n x n permutation log-score matrix, S_perm[i][j] = log p_i^perm(j).
+          This has the same shape/role as the S matrix monomial_approximation returns, so
+          it plugs directly into posterior_aware_prange_repair / marginal_error_region
+          unchanged - see the module docstring's note on what does and does not carry
+          over unchanged from the full-matrix repair stage. (build_active_row_lists /
+          structured_sd_repair are NOT reusable as-is here: they additionally index
+          D_loc[i][j] for every candidate column j, which the decoupled model never
+          computes - only d_hat_i, the single value selected independently of j.)
+        - d_hat: list of n selected nonzero values, d_hat[i] = the value assigned to row i
+        - pi_hat: list of n selected columns, pi_hat[i] = the column assigned to row i
+    """
+    n = len(p_perm)
+    _vprint(f"    [monomial_approximation_vector] n={n}")
+    t0 = time.time()
+
+    # Phase 1: local scalar optimization - independent of the column assignment, since
+    # p_i^scale(a) does not depend on j (no cross-terms in the two-vector model).
+    d_hat = [max(p_scale[i], key=lambda a: p_scale[i][a]) for i in range(n)]
+
+    # Phase 2: global permutation matching - no zero-entry background term (contrast with
+    # RowScore's s_ij = log p_ij(d_hat_ij) + Z_i - log p_ij(0) in the full-matrix model).
+    S_perm = [[_safe_log(p_perm[i].get(j, 0)) for j in range(n)] for i in range(n)]
+    pi_hat = hungarian_assignment(S_perm)
+
+    # Phase 3: matrix assembly.
+    Q_hat = matrix(F, n, n)
+    for i in range(n):
+        Q_hat[i, pi_hat[i]] = d_hat[i]
+
+    _vprint(f"    [monomial_approximation_vector] done ({time.time() - t0:.2f}s)")
+    return Q_hat, S_perm, d_hat, pi_hat
+
+
+def predict_image_from_lists(v, pi_hat, d_hat, F):
+    """
+    Remark 1 (Action-Based Evaluation). Computes the predicted image w_tilde = v * Q_hat
+    directly from the (pi_hat, d_hat) vector pair, without ever assembling the n x n Q_hat
+    matrix: w_tilde[pi_hat[i]] = v[i] * d_hat[i] (mod q), for every i. Equivalent to
+    predict_image(v, Q_hat) for the Q_hat monomial_approximation_vector would assemble
+    from the same (pi_hat, d_hat), but without the O(n) memory / assembly cost of building
+    Q_hat explicitly - relevant here because predict_image is called once per enumerated
+    low-weight codeword inside the prediction-and-repair loop (Algorithm 1).
+
+    :param v: a row vector v in C (or any length-n vector over F)
+    :param pi_hat: list of n selected columns, from monomial_approximation_vector
+    :param d_hat: list of n selected nonzero values, from monomial_approximation_vector
+    :param F: the base field GF(q)
+    :return: the predicted image w_tilde, a length-n vector over F
+    """
+    n = len(pi_hat)
+    w_tilde = vector(F, n)
+    for i in range(n):
+        # F already represents every element mod q; the "(mod q)" of Remark 1 is exactly
+        # this field arithmetic, not a separate reduction step applied on top of it.
+        w_tilde[pi_hat[i]] = v[i] * d_hat[i]
+    return w_tilde
+
+
+
+# ---------------------------------------------------------------------------
 # Section 3 / 5.1: prediction step and active-row error analysis
 # ---------------------------------------------------------------------------
 
@@ -520,23 +978,83 @@ def induced_sd_repair(w_tilde, v, H_prime, tau, max_trials=2000, decoder=None):
 # (Algorithm 7: BuildActiveRowLists, Algorithm 8: StructuredSDRepair)
 # ---------------------------------------------------------------------------
 
-def build_active_row_lists(v, S, D_loc, F, budgets):
+def row_hypothesis_universe(i, posterior_row, F, n, exclude=None):
     """
-    Algorithm 7 (BuildActiveRowLists). For every active row i in Supp(v),
+    Builds and scores the FULL row-hypothesis candidate universe R_i =
+    { R_i(j, a) : j in [n], a in F_q^* } for row i (Definition 9 / Section
+    4.3.3's "Candidate Active-Row Generation"), i.e. every (column,
+    coefficient) pair, not just the single best coefficient per column.
+
+    This is the piece that build_active_row_lists and build_row_domains
+    used to skip: both previously ranked columns by s_i,j = max_a
+    gamma_i(j, a) and kept only that one argmax coefficient D_loc[i][j]
+    per retained column. That is the WRONG object whenever the true
+    coefficient at a retained column is not itself the per-column argmax
+    (confirmed on real runs - see list_based_leakage_problem_and_fix.md
+    for the list-based instance of exactly this bug, and the thesis
+    director's remark, 2026-09-29, that the candidate list L_i must
+    contain the real row, "even if it's far behind in the queue" - i.e.
+    ranked by score, not pre-filtered down to one coefficient per column).
+    The manuscript's own Algorithm 8 (BuildActiveRowLists) is explicit
+    that the candidate universe is the full cross product of columns and
+    coefficients, scored individually via gamma_i(j, a), with L_i simply
+    the top-N_i of THAT set - so this helper builds exactly that set,
+    once, and every caller (the tree's build_row_domains and the
+    brute-force build_active_row_lists) ranks/truncates it the same way.
+
+    :param i: row index (unused beyond bookkeeping - posterior_row is
+        already row i's own posterior)
+    :param posterior_row: posterior_table[i], i.e. a length-n list of
+        dicts, posterior_row[j] = {a: p_i,j(a) for a in F_q}
+    :param F: the base field GF(q)
+    :param n: the code length (number of columns)
+    :param exclude: an optional (j, a) pair to omit from the universe -
+        used to drop the exact keep choice K_i, which callers add back
+        separately at cost 0, so it is not duplicated as a cost-1 option
+    :return: a list of (j, a, score) triples, sorted by nonincreasing
+        score, with score = gamma_i(j, a) = log p_i,j(a) + Z_i - log
+        p_i,j(0) (Section 4.2.2's efficient form; Z_i = sum_l log p_i,l(0))
+    """
+    z_i = sum(_safe_log(posterior_row[l].get(F(0), 0)) for l in range(n))
+
+    candidates = []
+    for j in range(n):
+        log_zero_j = _safe_log(posterior_row[j].get(F(0), 0))
+        base = z_i - log_zero_j
+        for a in F:
+            if a == F(0):
+                continue
+            if exclude is not None and (j, a) == exclude:
+                continue
+            score = _safe_log(posterior_row[j].get(a, 0)) + base
+            candidates.append((j, a, score))
+
+    candidates.sort(key=lambda t: t[2], reverse=True)
+    return candidates
+
+
+def build_active_row_lists(v, posterior_table, Q_hat, F, budgets):
+    """
+    Algorithm 8 (BuildActiveRowLists). For every active row i in Supp(v),
     builds a candidate list L_i of the highest-scoring monomial-row
-    replacement hypotheses R_i(j, a), reusing the local score matrix S and
-    value matrix D_loc already computed by monomial_approximation.
+    replacement hypotheses R_i(j, a), ranked over the FULL candidate
+    universe (row_hypothesis_universe) rather than one coefficient per
+    column - see that function's docstring for why the old
+    per-column-argmax version was wrong.
 
     :param v: a row vector v in C
-    :param S: the local score matrix from monomial_approximation
-    :param D_loc: the local value matrix from monomial_approximation
+    :param posterior_table: the n x n posterior table from
+        compute_posterior_table / compute_posterior_table_list_based
+    :param Q_hat: the monomial approximation of the secret Q (used only to
+        read off each active row's keep choice, so it can be excluded from
+        the non-keep candidate universe - see row_hypothesis_universe)
     :param F: the base field GF(q)
     :param budgets: a dict {i: N_i} giving the candidate budget per active row
         (a single int may be passed instead to use the same budget everywhere)
     :return: a tuple (A, L), where A = Supp(v) and L is a dict
         {i: [(row_vector, score), ...]} sorted by decreasing score
     """
-    n = len(S)
+    n = len(posterior_table)
     A = support(v)
 
     # Accept either a per-row dict {i: N_i} or a single scalar budget applied
@@ -550,15 +1068,17 @@ def build_active_row_lists(v, S, D_loc, F, budgets):
 
     L = {}
     for i in A:
-        # Rank every column hypothesis j for row i by its local score s_ij.
-        candidates = sorted(range(n), key=lambda j: S[i][j], reverse=True)
+        pi_tilde_i = next(j for j in range(n) if Q_hat[i, j] != 0)
+        d_tilde_i = Q_hat[i, pi_tilde_i]
         N_i = budgets.get(i, n)
 
+        universe = row_hypothesis_universe(i, posterior_table[i], F, n,
+                                            exclude=(pi_tilde_i, d_tilde_i))
         L_i = []
-        for j in candidates[:N_i]:
+        for j, a, score in universe[:N_i]:
             row = vector(F, n)
-            row[j] = D_loc[i][j]
-            L_i.append((row, S[i][j]))
+            row[j] = a
+            L_i.append((row, score))
         L[i] = L_i
 
     _vprint(f"        [active_rows] |A|={len(A)} budgets={[len(L[i]) for i in A]}", flush=True)
@@ -1049,7 +1569,7 @@ if __name__ == "__main__":
     )
 
     # --- Step 2: turn the noisy hint into a BBLM posterior table -----------
-    posterior_table = compute_posterior_table(Q_noisy, alpha, beta, is_permutation=False)
+    posterior_table = compute_posterior_table_exact(Q_noisy, n, q, alpha, beta, is_permutation=False)
 
     # --- Step 3: build the monomial approximation Q_hat --------------------
     Q_hat, S, D_loc, pi = monomial_approximation(posterior_table, F)
@@ -1074,7 +1594,7 @@ if __name__ == "__main__":
     print("\nMinimum distance of C (brute force):", min_weight)
 
     def repair_fn(w_tilde, v):
-        A, L = build_active_row_lists(v, S, D_loc, F, budgets=3)
+        A, L = build_active_row_lists(v, posterior_table, Q_hat, F, budgets=3)
         return structured_sd_repair(w_tilde, v, H2, Q_hat, A, L, rmax)
 
     pairs = prediction_and_repair_framework(

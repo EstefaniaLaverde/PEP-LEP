@@ -75,6 +75,7 @@ from instances_generator import (
 
 from LEP_prediction_and_repair_v2 import (
     compute_posterior_table,
+    compute_posterior_table_exact,
     monomial_approximation,
     build_active_row_lists,
     structured_sd_repair,
@@ -400,6 +401,7 @@ def run_prediction_and_repair_instrumented(G1, Q, Q_hat, S, D_loc, F, H2,
                                             target_weight, max_trials_enum,
                                             budgets, enum_version,
                                             repair_algorithm, k,
+                                            posterior_table=None,
                                             heartbeat_every_s=5.0):
     """
     Same as prediction_and_repair_framework (Algorithm 1), but additionally
@@ -466,7 +468,7 @@ def run_prediction_and_repair_instrumented(G1, Q, Q_hat, S, D_loc, F, H2,
                     w_tilde, v, H2, Q_hat, S, k, tau, K_B=budgets,
                 )
             elif repair_algorithm == 'structured_sd_repair':
-                A, L = build_active_row_lists(v, S, D_loc, F, budgets=budgets)
+                A, L = build_active_row_lists(v, posterior_table, Q_hat, F, budgets=budgets)
                 w = structured_sd_repair(w_tilde, v, H2, Q_hat, A, L, rmax)
             else:
                 raise ValueError(f"Unknown repair_algorithm: {repair_algorithm!r}")
@@ -556,7 +558,7 @@ def run_single_experiment(n, k, q, alpha, beta, rmax, weight_factor, budgets,
         # --- 2) BBLM posterior table ----------------------------------------
         _vprint("\n    [stage 2/5] computing posterior table...", end='', flush=True)
         t0 = time.time()
-        posterior_table = compute_posterior_table(Q_noisy, alpha, beta, is_permutation=False)
+        posterior_table = compute_posterior_table_exact(Q_noisy, n, q, alpha, beta, is_permutation=False)
         result['posterior_time_s'] = time.time() - t0
         _vprint(f" done ({result['posterior_time_s']:.2f}s)", end='', flush=True)
 
@@ -608,7 +610,7 @@ def run_single_experiment(n, k, q, alpha, beta, rmax, weight_factor, budgets,
         pairs, r_values, iters_used, enum_failures = run_prediction_and_repair_instrumented(
             G1, Q, Q_hat, S, D_loc, F, H2, rmax, m_pair, n_iter,
             target_weight, max_trials_enum, budgets, enum_version,
-            repair_algorithm, k,
+            repair_algorithm, k, posterior_table=posterior_table,
         )
         result['repair_time_s'] = time.time() - t0
         _vprint(

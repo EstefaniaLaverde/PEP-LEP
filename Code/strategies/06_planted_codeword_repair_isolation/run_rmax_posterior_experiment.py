@@ -17,6 +17,7 @@ from instances_generator import (
 )
 from LEP_prediction_and_repair_v2 import (
     compute_posterior_table,
+    compute_posterior_table_exact,
     monomial_approximation,
     support,
     active_error_set,
@@ -132,16 +133,20 @@ def generate_noisy_LCE_instance_from_G1(G1, q, alpha, beta, is_monomial=True):
     :param alpha: Pr[bit 1 -> 0]
     :param beta: Pr[bit 0 -> 1]
     :param is_monomial: True for LEP (random monomial secret)
-    :return: a tuple (G2, Q, Q_noisy)
+    :return: a tuple (G2, Q, Q_noisy) - Q_noisy is a RAW (unreduced)
+        nested list of ints, not a GF(q) matrix
     """
-    F = G1.base_ring()
     n = G1.ncols()
 
     Q = generate_random_monomial(n, q, is_permutation=not is_monomial)
     G2 = (G1 * Q).rref()
 
+    # Kept RAW (NOT coerced into GF(q)); compute_posterior_table_exact
+    # needs the unreduced leaked integer to score candidates against the
+    # thesis's exact bit-channel formula - see
+    # build_bit_channel_matrix_exact's docstring in
+    # core/LEP_prediction_and_repair_v2.py.
     Q_noisy = generate_bit_channel_hint(Q, q, alpha, beta)
-    Q_noisy = matrix(F, Q_noisy)
 
     return G2, Q, Q_noisy
 
@@ -185,7 +190,7 @@ def run_one_instance(n, k, q, alpha, beta, weight_factor, seed):
         G2, Q, Q_noisy = generate_noisy_LCE_instance_from_G1(G1, q, alpha, beta, is_monomial=True)
 
         t0 = time.time()
-        posterior_table = compute_posterior_table(Q_noisy, alpha, beta, is_permutation=False)
+        posterior_table = compute_posterior_table_exact(Q_noisy, n, q, alpha, beta, is_permutation=False)
         elapsed_posterior = time.time() - t0
 
         t0 = time.time()

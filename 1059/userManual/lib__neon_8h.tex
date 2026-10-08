@@ -1,0 +1,270 @@
+\doxysection{lib\+\_\+neon.\+h File Reference}
+\label{lib__neon_8h}\index{lib\_neon.h@{lib\_neon.h}}
+
+
+Functions for calculations using neon instructions.  
+
+
+{\ttfamily \#include "{}Data.\+h"{}}\newline
+{\ttfamily \#include "{}Read\+Write.\+h"{}}\newline
+{\ttfamily \#include "{}Polynomials.\+h"{}}\newline
+Include dependency graph for lib\+\_\+neon.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=212pt]{lib__neon_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{Indent}\textbf{ Weight\+Spectrum}\par
+{\em Calculation of the weight spectrum of a linear code using neon instructions
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field,  \\ &  saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib__neon_8h_a8a6c67a8bd021521b9fdb21ba08bd9f1} 
+void {\bfseries calculate\+Weight\+CH3\+\_\+neon} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_acb8bdb0e019f6b8d45e639b9efe80ca4} 
+void {\bfseries calculate\+Weight\+Bytes\+\_\+neon} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a5505d79225d927ad14820fa54f5734ad} 
+void {\bfseries calculate\+Weight\+CH2\+\_\+neon} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a582ff1fcc7e7bdf62045c3a90030e951} 
+void {\bfseries calculate\+Weight\+GF2\+\_\+neon} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Search\+Less\+Than}\par
+{\em Searching for codeword with weight less than given value using neon instructions
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field,  \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & if a codeword with weight {\bfseries{w}} is found \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Partial weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib__neon_8h_ad63371134e100607f27da45a0ecadd8e} 
+bool {\bfseries calculate\+Weight\+CH3\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a0365da7728aa28dee36f1168c4ebc6f2} 
+bool {\bfseries calculate\+Weight\+Bytes\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int w)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_afc9e0ac4c954c381c672081cd941aedf} 
+bool {\bfseries calculate\+Weight\+CH2\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a8028024c7730aaa14d9cfc39a1072d81} 
+bool {\bfseries calculate\+Weight\+GF2\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Search\+Equal\+To}\par
+{\em Searching for codeword with weight equal to given value using neon instructions
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ &  saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & if a codeword with weight {\bfseries{w}} is found \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Partial weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib__neon_8h_aaa96f828528270e06ced9098aadb238b} 
+bool {\bfseries calculate\+Weight\+CH3\+\_\+neon\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int d)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a384d089f1d6539dcc1421e061a9fb2c6} 
+bool {\bfseries calculate\+Weight\+Bytes\+\_\+neon\+\_\+equal} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int d)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_aa0c9749e10f88e1d4c6659566531c58d} 
+bool {\bfseries calculate\+Weight\+CH2\+\_\+neon\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int d)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a29666e5c3c59d70b3317463822f5f952} 
+bool {\bfseries calculate\+Weight\+GF2\+\_\+neon\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int d)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Count\+Equal\+To}\par
+{\em Counting the number of codewords with weight equal to given value using neon instructions and writing the generated nonproportional codewords in file {\bfseries{Result\+\_\+codewords.\+txt}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ &  saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+{\em multiplicative\+Form} & if true, the codewords will be written, using multiplicative representation of the elements of the field \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Total} & number of codewords with weight {\bfseries{w}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib__neon_8h_a26b0855780d94bc9dc2a71758ba07b10} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH3\+\_\+neon\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a31b1edb830b80e77681e38165de27800} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+Bytes\+\_\+neon\+\_\+equal} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a2c141fec82440d2d0fedaf1f26219a2f} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH2\+\_\+neon\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a749ba91dab109bcb29ef1b3c8f01c41b} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+GF2\+\_\+neon\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Count\+Less\+Than}\par
+{\em Counting the number of codewords with weight less than given value using neon instructions registers and writing the generated nonproportional codewords in file {\bfseries{Result\+\_\+codewords.\+txt}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ &  saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+{\em multiplicative\+Form} & if true, the codewords will be written, using multiplicative representation of the elements of the field \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Total} & number of codewords with weight less than {\bfseries{w}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib__neon_8h_ad994b4c4f9e02be343613a4944832275} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH3\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_aee65ba7627ba8664052ad1e3d0a92a95} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+Bytes\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a1a3afc961ddf828221c802a620dae75d} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH2\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_aede8728e446b3b7565f46406b4d7d66f} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+GF2\+\_\+neon\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static const int \textbf{ N\+\_\+\+FIX} = 3072
+\begin{DoxyCompactList}\small\item\em Constant global variable used for declaration of static arrays, containing different representation of the generator matrix. \end{DoxyCompactList}\item 
+static const int \textbf{ K\+\_\+\+FIX} = 36
+\begin{DoxyCompactList}\small\item\em Constant global variable used for declaration of static arrays, containing different representation of the generator matrix. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a4e2f5965fa566f6b01e7c1a662afd142} 
+unsigned long long int {\bfseries weights} [$\,$]
+\begin{DoxyCompactList}\small\item\em Global variable for that contains weight spectrum. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_accf7d6285fc9f055154908cbe99f485d} 
+static short int {\bfseries Transition\+Sequence64} [64]
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 2. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_ac0b7be100a66eb7c722137b41f2806c0} 
+static short int {\bfseries Transition\+Sequence27} [27] = \{ 0,1,1,2,1,1,2,1,1,3,1,1,2,1,1,2,1,1,3,1,1,2,1,1,2,1,1 \}
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 3. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a5bb901a4070416f7d6647b4bdc415d87} 
+static short int {\bfseries Transition\+Sequence25} [25] = \{ 0,1,1,1,1, 2,1,1,1,1, 2,1,1,1,1, 2,1,1,1,1, 2,1,1,1,1 \}
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 5. \end{DoxyCompactList}\item 
+\label{lib__neon_8h_a2537ed89eaeab974992167650c30011a} 
+static short int {\bfseries Transition\+Sequence49} [49] = \{ 0,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1 \}
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 7. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+If ARM architecture is detected by CMake before generation of the IDE project or Makefile, the files \doxyref{lib128.\+h}{p.}{lib128_8h}, \doxyref{lib256.\+h}{p.}{lib256_8h}, \doxyref{lib512.\+h}{p.}{lib512_8h} and the corresponding .cpp files are not used for the generation of the project. Instead the current file \doxyref{lib\+\_\+neon.\+h}{p.}{lib__neon_8h} and the corresponding .cpp file are used. 
+
+\doxysubsection{Variable Documentation}
+\label{lib__neon_8h_a78352687c021613f7eb0f5a40ae3cb1f} 
+\index{lib\_neon.h@{lib\_neon.h}!K\_FIX@{K\_FIX}}
+\index{K\_FIX@{K\_FIX}!lib\_neon.h@{lib\_neon.h}}
+\doxysubsubsection{K\_FIX}
+{\footnotesize\ttfamily const int K\+\_\+\+FIX = 36\hspace{0.3cm}{\ttfamily [static]}}
+
+This parameter referce to the dimension of the code. The maximum possible dimension of the code depends on this value and the number of elements in the finite field.
+
+\begin{DoxyNote}{Note}
+value should be multiple of 12 
+\end{DoxyNote}
+\label{lib__neon_8h_a207a2f75362fc14620209f8d7586289b} 
+\index{lib\_neon.h@{lib\_neon.h}!N\_FIX@{N\_FIX}}
+\index{N\_FIX@{N\_FIX}!lib\_neon.h@{lib\_neon.h}}
+\doxysubsubsection{N\_FIX}
+{\footnotesize\ttfamily const int N\+\_\+\+FIX = 3072\hspace{0.3cm}{\ttfamily [static]}}
+
+This parameter refers to the length of the code. The maximum possible length of the code depends on this value and the number of elements in the finite field.
+
+\begin{DoxyNote}{Note}
+value should be multiple of 1536 
+\end{DoxyNote}

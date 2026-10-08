@@ -58,6 +58,7 @@ from instances_generator import (
 )
 from LEP_prediction_and_repair_v2 import (
     compute_posterior_table,
+    compute_posterior_table_exact,
     monomial_approximation,
     build_active_row_lists,
     structured_sd_repair,
@@ -253,16 +254,21 @@ def generate_noisy_LCE_instance_from_G1(G1, q, alpha, beta, is_monomial=True):
     :param is_monomial: True for LEP (random monomial secret), False for
         PEP (random permutation secret)
     :return: a tuple (G2, Q, Q_noisy), matching the (G2, QP, QP_noisy)
-        outputs of generate_noisy_LCE_instance_CBA_bit_flip_version
+        outputs of generate_noisy_LCE_instance_CBA_bit_flip_version - except
+        Q_noisy here is a RAW (unreduced) nested list of ints, not a GF(q)
+        matrix (see the note below)
     """
-    F = G1.base_ring()
     n = G1.ncols()
 
     Q = generate_random_monomial(n, q, is_permutation=not is_monomial)
     G2 = (G1 * Q).rref()
 
+    # Kept RAW (NOT coerced into GF(q)); compute_posterior_table_exact
+    # needs the unreduced leaked integer to score candidates against the
+    # thesis's exact bit-channel formula - see
+    # build_bit_channel_matrix_exact's docstring in
+    # core/LEP_prediction_and_repair_v2.py.
     Q_noisy = generate_bit_channel_hint(Q, q, alpha, beta)
-    Q_noisy = matrix(F, Q_noisy)
 
     return G2, Q, Q_noisy
 
@@ -317,7 +323,7 @@ def run_instance(n, k, q, alpha, beta, weight_factor=1.1, rmax=None, budgets=3,
     print(f"  instance generated ({time.time() - t0:.2f}s)")
 
     t0 = time.time()
-    posterior_table = compute_posterior_table(Q_noisy, alpha, beta, is_permutation=False)
+    posterior_table = compute_posterior_table_exact(Q_noisy, n, q, alpha, beta, is_permutation=False)
     Q_hat, S, D_loc, pi = monomial_approximation(posterior_table, F)
     rows_full = sum(1 for i in range(n) if list(Q_hat[i]) == list(Q[i]))
     print(f"  Q_hat built ({time.time() - t0:.2f}s); {rows_full}/{n} rows exactly correct")
@@ -370,7 +376,7 @@ def run_instance(n, k, q, alpha, beta, weight_factor=1.1, rmax=None, budgets=3,
     # the discussion in the earlier version of this script / conversation.
     repair_algorithm = 'posterior_aware_prange_repair'
     t0 = time.time()
-    w = posterior_aware_prange_repair(w_tilde, v, H2, Q_hat, S, k, tau, K_B=budgets, max_trials=100000)
+    w = posterior_aware_prange_repair(w_tilde, v, H2, Q_hat, S, k, tau, K_B=budgets, max_trials=1000000)
     # w = induced_sd_repair(w_tilde, v, H2, tau)
     # A, L = build_active_row_lists(v, S, D_loc, F, budgets=budgets)
     # w = structured_sd_repair(w_tilde, v, H2, Q_hat, A, L, rmax)
@@ -403,16 +409,16 @@ def run_instance(n, k, q, alpha, beta, weight_factor=1.1, rmax=None, budgets=3,
 
 def main():
     # run_instance(
-    #     n=16, k=8, q=127, alpha=0.01, beta=0.08,
+    #     n=16, k=8, q=29, alpha=0.01, beta=0.08,
     #     weight_factor=1.1, rmax=None, budgets=5,
-    #     label="[small instance]", seed=20260814
+    #     label="[small instance]", seed=6
     # )
 
-    seeds = [i for i in range(26, 36)]
+    seeds = [i for i in range(5, 15)]
     for seed in seeds:
         run_instance(
-            n=128, k=64, q=127, alpha=0.01, beta=0.05,
-            weight_factor=1.1, rmax=None, budgets=5,
+            n=252, k=126, q=127, alpha=0.01, beta=0.03,
+            weight_factor=1.1, rmax=20, budgets=10,
             label="[requested instance]", seed=seed
         )
 

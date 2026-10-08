@@ -1,0 +1,169 @@
+\doxysection{Read\+Write.\+h File Reference}
+\label{_read_write_8h}\index{ReadWrite.h@{ReadWrite.h}}
+
+
+Function declarations for reading and writing code parameters form file and generating random generator matrices in standard form for given parameters of a code.  
+
+
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include "{}Polynomials.\+h"{}}\newline
+Include dependency graph for Read\+Write.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=150pt]{_read_write_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \textbf{ read\+Matrix} (FILE $\ast$file\+Name, int \&n, int \&k, int \&q)
+\begin{DoxyCompactList}\small\item\em Function for reading generator matrices from an open file. \end{DoxyCompactList}\item 
+void \textbf{ print\+Weights} (unsigned long long int $\ast$spec, int N, char $\ast$file)
+\begin{DoxyCompactList}\small\item\em Function for writing the weight spectrum of a linear code in to a file. \end{DoxyCompactList}\item 
+void \textbf{ print\+Matrix} (bool form, char $\ast$file)
+\begin{DoxyCompactList}\small\item\em Function for writing the generator matrix in to an output file. \end{DoxyCompactList}\item 
+void \textbf{ randomgenf} (int n, int k, int q, int num)
+\begin{DoxyCompactList}\small\item\em Generating random generator matrices of a codes with given parameters. \end{DoxyCompactList}\item 
+void \textbf{ randomgenf} (int n, int k, int q, int $\ast$$\ast$generator\+Matrix, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Generating a random generator matrix of a code for given parameters. \end{DoxyCompactList}\item 
+void \textbf{ write\+\_\+multpl} (int dec, FILE $\ast$write)
+\begin{DoxyCompactList}\small\item\em Function for writing an element of the field in multiplicative form. \end{DoxyCompactList}\item 
+void \textbf{ write\+\_\+multpl\+\_\+magma} (int dec, FILE $\ast$write)
+\begin{DoxyCompactList}\small\item\em function for writing an element of the field in multiplicative form \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\label{_read_write_8h_a9b43153a07f04ae3aba4fdbf202f971e} 
+\index{ReadWrite.h@{ReadWrite.h}!printMatrix@{printMatrix}}
+\index{printMatrix@{printMatrix}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{printMatrix()}
+{\footnotesize\ttfamily void print\+Matrix (\begin{DoxyParamCaption}\item[{bool}]{form,  }\item[{char $\ast$}]{file }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em form} & true, if the elements of the filed are written in the generator matrix in multiplicative form\\
+\hline
+{\em file} & Name of the output file\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The generator matrix is read from the global variable \doxyref{matrix}{p.}{_data_8h_ab42801c87cce00790ac0da9e0520698b} 
+\end{DoxyNote}
+\label{_read_write_8h_a14d0cb117b8c99a91c5b1f230751b257} 
+\index{ReadWrite.h@{ReadWrite.h}!printWeights@{printWeights}}
+\index{printWeights@{printWeights}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{printWeights()}
+{\footnotesize\ttfamily void print\+Weights (\begin{DoxyParamCaption}\item[{unsigned long long int $\ast$}]{spec,  }\item[{int}]{N,  }\item[{char $\ast$}]{file }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em spec} & Weight spectrum of a code\\
+\hline
+{\em N} & Length of the code\\
+\hline
+{\em file} & Name of the output file\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The generator matrix of the code should be written with function print\+Matrix \doxyref{print\+Matrix(bool form, char$\ast$ file)}{p.}{_read_write_8h_a9b43153a07f04ae3aba4fdbf202f971e} 
+\end{DoxyNote}
+\label{_read_write_8h_ad9806210c2db52d1b6bc085bc7bb3d64} 
+\index{ReadWrite.h@{ReadWrite.h}!randomgenf@{randomgenf}}
+\index{randomgenf@{randomgenf}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{randomgenf()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void randomgenf (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int}]{k,  }\item[{int}]{q,  }\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Length of the code\\
+\hline
+{\em k} & Dimension of the code\\
+\hline
+{\em q} & Number of elements in the finite field\\
+\hline
+{\em generator\+Matrix} & A pointer to a dynamic 2D array that will contain the generator matrices\\
+\hline
+{\em multiplicative\+Form} & true if the generator matrix is to be saved in multiplicative form\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The generator matrix are written in output file {\bfseries{EXAM}} 
+\end{DoxyNote}
+\label{_read_write_8h_a3f462280220d554d4e1f78240c8f574d} 
+\index{ReadWrite.h@{ReadWrite.h}!randomgenf@{randomgenf}}
+\index{randomgenf@{randomgenf}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{randomgenf()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void randomgenf (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int}]{k,  }\item[{int}]{q,  }\item[{int}]{num }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Length of the code\\
+\hline
+{\em k} & Dimension of the code\\
+\hline
+{\em q} & Number of elements in the finite field\\
+\hline
+{\em num} & Number of matrices to be generated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The generator matrices are written in output file {\bfseries{EXAM}}. If just one matrix is to be generated, it is saved in global variable \doxyref{matrix}{p.}{_data_8h_ab42801c87cce00790ac0da9e0520698b} 
+\end{DoxyNote}
+\label{_read_write_8h_a17c6d3d219cb2d4221b8fc414a6c6311} 
+\index{ReadWrite.h@{ReadWrite.h}!readMatrix@{readMatrix}}
+\index{readMatrix@{readMatrix}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{readMatrix()}
+{\footnotesize\ttfamily bool read\+Matrix (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{file\+Name,  }\item[{int \&}]{n,  }\item[{int \&}]{k,  }\item[{int \&}]{q }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & Pointer to an open input stream of the input file, containing generator matrix\\
+\hline
+{\em n} & Length of the code\\
+\hline
+{\em k} & Dimension of the code\\
+\hline
+{\em q} & Number of elements in the finite field\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true, if error occurs in the input (e.\+g. there is an character in the generator matrix instead of a number)
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+if the file is not open, the program end execution with an error code 
+\end{DoxyNote}
+\label{_read_write_8h_afefff213c11ad30a955a0ac3e0f41a12} 
+\index{ReadWrite.h@{ReadWrite.h}!write\_multpl@{write\_multpl}}
+\index{write\_multpl@{write\_multpl}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{write\_multpl()}
+{\footnotesize\ttfamily void write\+\_\+multpl (\begin{DoxyParamCaption}\item[{int}]{dec,  }\item[{FILE $\ast$}]{write }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em dec} & Decimal representation of the element\\
+\hline
+{\em write} & Pointer to an open stream for writing \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+If an incorrect decimal is given, the function will end the program with an error code and an error message will be written in file {\bfseries{error.\+txt}} 
+\end{DoxyNote}
+\label{_read_write_8h_a0d114453469aab9887332fa33600902b} 
+\index{ReadWrite.h@{ReadWrite.h}!write\_multpl\_magma@{write\_multpl\_magma}}
+\index{write\_multpl\_magma@{write\_multpl\_magma}!ReadWrite.h@{ReadWrite.h}}
+\doxysubsubsection{write\_multpl\_magma()}
+{\footnotesize\ttfamily void write\+\_\+multpl\+\_\+magma (\begin{DoxyParamCaption}\item[{int}]{dec,  }\item[{FILE $\ast$}]{write }\end{DoxyParamCaption})}
+
+Function for writing an element of the field in multiplicative form in magma style
+
+
+\begin{DoxyParams}{Parameters}
+{\em dec} & Decimal representation of the element\\
+\hline
+{\em write} & Pointer to an open stream for writing \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+If an incorrect decimal is given, the function will end the program with an error code and an error message will be written in file {\bfseries{error.\+txt}} 
+\end{DoxyNote}

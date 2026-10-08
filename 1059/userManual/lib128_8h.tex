@@ -1,0 +1,346 @@
+\doxysection{lib128.\+h File Reference}
+\label{lib128_8h}\index{lib128.h@{lib128.h}}
+
+
+Functions for calculations using 128-\/bit registers.  
+
+
+{\ttfamily \#include "{}Data.\+h"{}}\newline
+{\ttfamily \#include "{}Read\+Write.\+h"{}}\newline
+{\ttfamily \#include "{}Polynomials.\+h"{}}\newline
+Include dependency graph for lib128.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=212pt]{lib128_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ popcnt\+\_\+detect} ()
+\begin{DoxyCompactList}\small\item\em Function that detects whether the current architecture has a {\bfseries{popcnt}} instruction. \end{DoxyCompactList}\item 
+long long \textbf{ popcount} (unsigned long long word)
+\begin{DoxyCompactList}\small\item\em Function that based on the used compiler computes the number of nonzero bits in a computer word. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Weight\+Spectrum}\par
+{\em Calculation of the weight spectrum of a linear code using 128-\/bit registers
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field,\\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib128_8h_a8fcca054f4bf64f181618899030c3c95} 
+void {\bfseries calculate\+Weight\+CH3\+\_\+128} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib128_8h_a644e68fa05e9da76dfcc746a9d8425f9} 
+void {\bfseries calculate\+Weight\+Bytes\+\_\+128} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int p)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a5a4e2b9d8ee026b132455bddede41676} 
+void {\bfseries calculate\+Weight\+CH2\+\_\+128} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a41041f0f723fb7b719da30e8bf4dbac4} 
+void {\bfseries calculate\+Weight\+GF2\+\_\+128} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Search\+Less\+Than}\par
+{\em Searching for codeword with weight less than given value using 128-\/bit registers
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & if a codeword with weight {\bfseries{w}} is found \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Partial weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib128_8h_a9b56b7f4d5ee8b85ac48a42263ce0332} 
+bool {\bfseries calculate\+Weight\+CH3\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib128_8h_a28e06d3a4aa5f787ae36c9f39fd0cffa} 
+bool {\bfseries calculate\+Weight\+Bytes\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int p, int w)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a1b7ad086fcf207b36c8bb25c0cc34d7d} 
+bool {\bfseries calculate\+Weight\+CH2\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a7ffbaa19b935b171f7301dd03233dc34} 
+bool {\bfseries calculate\+Weight\+GF2\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Search\+Equal\+To}\par
+{\em Searching for codeword with weight equal to given value using 128-\/bit registers
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & if a codeword with weight {\bfseries{w}} is found \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Partial weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib128_8h_ae60f65ace02d8f610d133e86a1d2d502} 
+bool {\bfseries calculate\+Weight\+CH3\+\_\+128\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int d)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib128_8h_ad1bf457247182f4cdd46df41826550ab} 
+bool {\bfseries calculate\+Weight\+Bytes\+\_\+128\+\_\+equal} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int p, int d)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a215b69c684895f1e908b15dc2ed9a0a6} 
+bool {\bfseries calculate\+Weight\+CH2\+\_\+128\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int d)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a5d02c4e00ad2abb640daaa071db2f8c6} 
+bool {\bfseries calculate\+Weight\+GF2\+\_\+128\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int d)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Count\+Equal\+To}\par
+{\em Counting the number of codewords with weight equal to given value using 128-\/bit registers and writing the generated nonproportional codewords in file {\bfseries{Result\+\_\+codewords.\+txt}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+{\em multiplicative\+Form} & if true, the codewords will be written, using multiplicative representation of the elements of the field \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Total} & number of codewords with weight {\bfseries{w}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib128_8h_a7f86e472d47057e74be28a4593eacf73} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH3\+\_\+128\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib128_8h_a792f082881cb1cb8cee78c9196cde318} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+Bytes\+\_\+128\+\_\+equal} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int p, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_ad048961e31f1e9b3e4c1b62b4e69e843} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH2\+\_\+128\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_ace1cdc68638cfb39521939c6b8271a3c} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+GF2\+\_\+128\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Count\+Less\+Than}\par
+{\em Counting the number of codewords with weight less than given value using 128-\/bit registers and writing the generated nonproportional codewords in file {\bfseries{Result\+\_\+codewords.\+txt}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+{\em multiplicative\+Form} & if true, the codewords will be written, using multiplicative representation of the elements of the field \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Total} & number of codewords with weight less than {\bfseries{w}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib128_8h_a1c75e84488a8824f3e3dcbe784c1c470} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH3\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib128_8h_aa41daf7be542fa2d978e0e3ab117caf0} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+Bytes\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int p, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_abbbc21629f6954411f0886904a824006} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH2\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib128_8h_a3f93b5eece73200ad1ccc28902748285} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+GF2\+\_\+128\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\label{lib128_8h_a4e2f5965fa566f6b01e7c1a662afd142} 
+unsigned long long int {\bfseries weights} [$\,$]
+\begin{DoxyCompactList}\small\item\em Global variable for that contains weight spectrum. \end{DoxyCompactList}\item 
+int \textbf{ POPCNT}
+\begin{DoxyCompactList}\small\item\em Global variable set by \doxyref{popcnt\+\_\+detect()}{p.}{lib128_8h_a5eeaebcc02455720dded49b2c492c1c6} to show whether the current architecture has a {\bfseries{popcnt}} instruction. \end{DoxyCompactList}\item 
+static const int \textbf{ N\+\_\+\+FIX} = 3072
+\begin{DoxyCompactList}\small\item\em Constant global variable used for declaration of static arrays, containing different representation of the generator matrix. \end{DoxyCompactList}\item 
+static const int \textbf{ K\+\_\+\+FIX} = 36
+\begin{DoxyCompactList}\small\item\em Constant global variable used for declaration of static arrays, containing different representation of the generator matrix. \end{DoxyCompactList}\item 
+\label{lib128_8h_accf7d6285fc9f055154908cbe99f485d} 
+static short int {\bfseries Transition\+Sequence64} [64]
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 2. \end{DoxyCompactList}\item 
+\label{lib128_8h_ac0b7be100a66eb7c722137b41f2806c0} 
+static short int {\bfseries Transition\+Sequence27} [27] = \{ 0,1,1,2,1,1,2,1,1,3,1,1,2,1,1,2,1,1,3,1,1,2,1,1,2,1,1 \}
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 3. \end{DoxyCompactList}\item 
+\label{lib128_8h_a5bb901a4070416f7d6647b4bdc415d87} 
+static short int {\bfseries Transition\+Sequence25} [25] = \{ 0,1,1,1,1, 2,1,1,1,1, 2,1,1,1,1, 2,1,1,1,1, 2,1,1,1,1 \}
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 5. \end{DoxyCompactList}\item 
+\label{lib128_8h_a2537ed89eaeab974992167650c30011a} 
+static short int {\bfseries Transition\+Sequence49} [49] = \{ 0,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1, 2,1,1,1,1,1,1 \}
+\begin{DoxyCompactList}\small\item\em Transition sequences of Q-\/ary Grey code for field with characteristics 7. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The defined global variables and functions are also used in other places in the library as external components. 
+
+\doxysubsection{Function Documentation}
+\label{lib128_8h_a5eeaebcc02455720dded49b2c492c1c6} 
+\index{lib128.h@{lib128.h}!popcnt\_detect@{popcnt\_detect}}
+\index{popcnt\_detect@{popcnt\_detect}!lib128.h@{lib128.h}}
+\doxysubsubsection{popcnt\_detect()}
+{\footnotesize\ttfamily void popcnt\+\_\+detect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\begin{DoxyNote}{Note}
+This function is used in computations with 128, 256 and 512-\/bit registers. The implementation is in the corresponding .cpp file. 
+\end{DoxyNote}
+\label{lib128_8h_a1bc704006914dd3b20e2618c4f8b162b} 
+\index{lib128.h@{lib128.h}!popcount@{popcount}}
+\index{popcount@{popcount}!lib128.h@{lib128.h}}
+\doxysubsubsection{popcount()}
+{\footnotesize\ttfamily long long popcount (\begin{DoxyParamCaption}\item[{unsigned long long}]{word }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+If POPCNT$<$0 it uses masks for the calculations.
+
+
+\begin{DoxyParams}{Parameters}
+{\em word} & A 64-\/bit computer word of type unsigned long long \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of nonzero bits in {\bfseries{word}}
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This function is used in computations with 128, 256 and 512-\/bit registers. The implementation is in the corresponding .cpp file. 
+\end{DoxyNote}
+
+
+\doxysubsection{Variable Documentation}
+\label{lib128_8h_a78352687c021613f7eb0f5a40ae3cb1f} 
+\index{lib128.h@{lib128.h}!K\_FIX@{K\_FIX}}
+\index{K\_FIX@{K\_FIX}!lib128.h@{lib128.h}}
+\doxysubsubsection{K\_FIX}
+{\footnotesize\ttfamily const int K\+\_\+\+FIX = 36\hspace{0.3cm}{\ttfamily [static]}}
+
+This parameter refers to the dimension of the code. The maximum possible dimension of the code depends on this value and the number of elements in the finite field.
+
+\begin{DoxyNote}{Note}
+value should be multiple of 12 
+\end{DoxyNote}
+\label{lib128_8h_a207a2f75362fc14620209f8d7586289b} 
+\index{lib128.h@{lib128.h}!N\_FIX@{N\_FIX}}
+\index{N\_FIX@{N\_FIX}!lib128.h@{lib128.h}}
+\doxysubsubsection{N\_FIX}
+{\footnotesize\ttfamily const int N\+\_\+\+FIX = 3072\hspace{0.3cm}{\ttfamily [static]}}
+
+This parameter refers to the length of the code. The maximum possible length of the code depends on this value and the number of elements in the finite field.
+
+\begin{DoxyNote}{Note}
+value should be multiple of 1536 
+\end{DoxyNote}
+
+\textbf{Remark:} In order to avoid runtime errors we define maximum values of $n$ and $k$. They depend on the global variable  \emph {N\_FIX} and \emph{K\_FIX} and can be easily changed if needed. Table \ref{NandK} shows the maximum values for $n$ and $k$ and the formula used to calculate them for different finite fields.
+\begin{table}
+	\caption{Maximum $n$ and $k$ for different fields for N\_FIX = 3072, K\_FIX = 36}
+	\label{NandK}
+	\begin{center}
+		\begin{tabular}{|c|l|c|l|c|}
+			\hline
+			Field & Formula for N & N &Formula for K & K\\
+			\hline \hline
+			$GF(2)$ & N = N\_FIX * 8 & 24576 & K = K\_FIX & 36 \\
+			$GF(4)$ & N = N\_FIX * 4 & 12288 & K = K\_FIX / 2 & 18\\
+			$GF(8)$ & N = N\_FIX  & 3072 & K = K\_FIX / 3 & 12\\
+			$GF(16)$ & N = N\_FIX &  3072 & K = K\_FIX / 4 & 9\\
+			$GF(32)$ & N = N\_FIX & 3072 & K = K\_FIX / 5 & 7\\
+			$GF(64)$ & N = N\_FIX & 3072 & K = K\_FIX / 6 &6\\
+			\hline
+			$GF(3)$ & N = N\_FIX * 4 & 12288 & K = K\_FIX & 36\\
+			$GF(9)$ & N = N\_FIX * 2 &  6144 & K = K\_FIX / 2 & 18\\
+			$GF(27)$ & N = (N\_FIX / 6) * 8 & 4096 & K = K\_FIX / 3& 12\\
+			\hline
+			$GF(p)$ & N = N\_FIX * 2 & 6144 & K = K\_FIX / 2 & 18\\
+			$GF(p^m)$ & N = N\_FIX & 3072 & K = K\_FIX / 4 & 9\\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\label{lib128_8h_a05dd14c2c1ec370781c7318e4437f69a} 
+\index{lib128.h@{lib128.h}!POPCNT@{POPCNT}}
+\index{POPCNT@{POPCNT}!lib128.h@{lib128.h}}
+\doxysubsubsection{POPCNT}
+{\footnotesize\ttfamily int POPCNT\hspace{0.3cm}{\ttfamily [extern]}}
+
+\begin{DoxyNote}{Note}
+If value $<$ 0 then the architecture does not have a {\bfseries{popcnt}} instruction. If value = 1 then the architecture has a {\bfseries{popcnt}} instruction for a computer word. If value = 2 then the architecture has a 512-\/bit {\bfseries{popcnt}} instructions. This parameter is used in computations with 128, 256 and 512-\/bit registers. 
+\end{DoxyNote}

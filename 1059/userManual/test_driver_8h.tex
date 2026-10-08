@@ -1,0 +1,104 @@
+\doxysection{test\+Driver.\+h File Reference}
+\label{test_driver_8h}\index{testDriver.h@{testDriver.h}}
+
+
+Declaration of a function for correctness and runtime testing.  
+
+
+{\ttfamily \#include "{}Lin\+Code\+Weight\+Inv.\+h"{}}\newline
+{\ttfamily \#include "{}Data.\+h"{}}\newline
+Include dependency graph for test\+Driver.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{test_driver_8h__incl}
+\end{center}
+\end{figure}
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+	\item 
+	void \textbf{ test\+\_\+drive} ()
+	\begin{DoxyCompactList}\small\item\em This function gives a simple interface designed to test all end user functionalities of the presented library with different instruction sets. \end{DoxyCompactList}\item 
+	void \textbf{ test\+\_\+drive\+SSE} (int mode)
+	\begin{DoxyCompactList}\small\item\em Function for testing functionalities with data from the corresponding manuscript with registers with 128-\/bit registers. \end{DoxyCompactList}\item 
+	void \textbf{ test\+\_\+drive\+AVX} (int mode)
+	\begin{DoxyCompactList}\small\item\em Function for testing functionalities with data from the corresponding manuscript with registers with 256-\/bit registers. \end{DoxyCompactList}\item 
+	void \textbf{ test\+\_\+drive\+AVX512} (int mode)
+	\begin{DoxyCompactList}\small\item\em Function for testing functionalities with data from the corresponding manuscript with registers with 512-\/bit registers. \end{DoxyCompactList}\item 
+	void \textbf{ test\+\_\+drive\+Scalar} (int mode)
+	\begin{DoxyCompactList}\small\item\em Function for testing functionalities with data from the corresponding manuscript with registers without vectorization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\label{test_driver_8h_a065bf7c3a9b5b1a1db13c25991f27cfe} 
+\index{testDriver.h@{testDriver.h}!test\_drive@{test\_drive}}
+\index{test\_drive@{test\_drive}!testDriver.h@{testDriver.h}}
+\doxysubsubsection{test\_drive()}
+{\footnotesize\ttfamily void test\+\_\+drive (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+The interface lets the user to chose with which instruction sets the computations will be executed. If ARM architecture is detected, appropriate message is displayed. Then the user should enter the name of a testing file. If it does not exists, it searches for file \emph{Test} in the current directory. The testing file should have the following structure: parameters of a code, presented as in Figures \ref{filedPrime} and \ref{fileComposite}, generator matrix and weight distribution $\{A_i\}$ for $i = 0, \dots, n$. For a given set of parameters we have a 100 codes presented by their generator matrices with computed weight distributions. 
+
+\begin{DoxyNote}{Note}
+The results (average execution times, total computational time) of the calculations are written in file {\bfseries{Results}}. The program ends with error message if there are errors in the computations. Error message is written in file {\bfseries{error.\+txt}} 
+\end{DoxyNote}
+
+
+
+\index{testDriver.h@{testDriver.h}!test\_driveAVX@{test\_driveAVX}}
+\index{test\_driveAVX@{test\_driveAVX}!testDriver.h@{testDriver.h}}
+\doxysubsubsection{test\_driveAVX()}
+{\footnotesize\ttfamily \label{test_driver_8h_a86574e387f82bd0c7f1faef33f84ed42} 
+	void test\+\_\+drive\+AVX (\begin{DoxyParamCaption}\item[{int}]{mode}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+	{\em mode} & Shows which function will be tested. Possible values are 1, 2, 3, 4, 5, 6 that correspond to the functions for\\
+& calculating weight distribution, minimum distance, \\
+& searching for codeword with weight equal to or less than given value,\\
+& counting the codewords with weight equal to or less than given value, respectively. \\
+	\hline
+\end{DoxyParams}
+\index{testDriver.h@{testDriver.h}!test\_driveAVX512@{test\_driveAVX512}}
+\index{test\_driveAVX512@{test\_driveAVX512}!testDriver.h@{testDriver.h}}
+\doxysubsubsection{test\_driveAVX512()}
+{\footnotesize\ttfamily \label{test_driver_8h_a9fa74037b4a263054937029a58f13ff8} 
+	void test\+\_\+drive\+AVX512 (\begin{DoxyParamCaption}\item[{int}]{mode}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+	{\em mode} & Shows which function will be tested. Possible values are 1, 2, 3, 4, 5, 6 that correspond to the functions for\\
+	& calculating weight distribution, minimum distance, \\
+	& searching for codeword with weight equal to or less than given value,\\
+	& counting the codewords with weight equal to or less than given value, respectively. \\
+	\hline
+\end{DoxyParams}
+\index{testDriver.h@{testDriver.h}!test\_driveScalar@{test\_driveScalar}}
+\index{test\_driveScalar@{test\_driveScalar}!testDriver.h@{testDriver.h}}
+\doxysubsubsection{test\_driveScalar()}
+{\footnotesize\ttfamily \label{test_driver_8h_a0411c5a9c79ad8a50208b67ef06dbcde} 
+	void test\+\_\+drive\+Scalar (\begin{DoxyParamCaption}\item[{int}]{mode}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+	{\em mode} & Shows which function will be tested. Possible values are 1, 2, 3, 4, 5, 6 that correspond to the functions for\\
+	& calculating weight distribution, minimum distance, \\
+	& searching for codeword with weight equal to or less than given value,\\
+	& counting the codewords with weight equal to or less than given value, respectively. \\
+	\hline
+\end{DoxyParams}
+\index{testDriver.h@{testDriver.h}!test\_driveSSE@{test\_driveSSE}}
+\index{test\_driveSSE@{test\_driveSSE}!testDriver.h@{testDriver.h}}
+\doxysubsubsection{test\_driveSSE()}
+{\footnotesize\ttfamily \label{test_driver_8h_a77e87755f33ea3e6119c8be386cff9fa} 
+	void test\+\_\+drive\+SSE (\begin{DoxyParamCaption}\item[{int}]{mode}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+	{\em mode} & Shows which function will be tested. Possible values are 1, 2, 3, 4, 5, 6 that correspond to the functions for\\
+& calculating weight distribution, minimum distance, \\
+& searching for codeword with weight equal to or less than given value,\\
+& counting the codewords with weight equal to or less than given value, respectively. \\
+	\hline
+\end{DoxyParams}
+

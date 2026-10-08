@@ -1,0 +1,468 @@
+\doxysection{Lin\+Code\+Weight\+Inv.\+cpp File Reference}
+\label{_lin_code_weight_inv_8cpp}\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+{\ttfamily \#include "{}Read\+Write.\+h"{}}\newline
+{\ttfamily \#include "{}Polinomials.\+h"{}}\newline
+{\ttfamily \#include "{}Data\+Management.\+h"{}}\newline
+{\ttfamily \#include "{}Lin\+Code\+Weight\+Inv.\+h"{}}\newline
+{\ttfamily \#include "{}Data.\+h"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+Include dependency graph for Lin\+Code\+Weight\+Inv.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_lin_code_weight_inv_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ calculate\+Weight\+Distribution} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Calculating the weight distribution of linear codes for given generator matrices, written in a file. \end{DoxyCompactList}\item 
+void \textbf{ calculate\+Weight\+Distribution} (int C, int R, int Q)
+\begin{DoxyCompactList}\small\item\em Calculation of the weight specrtum of a randomly generated linear code for given parameters of the code. \end{DoxyCompactList}\item 
+void \textbf{ calculate\+Weight\+Distribution} (int $\ast$$\ast$input, int C, int R, int Q, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Calculation of the weight spectrum of a linear code for a given generator matrix. \end{DoxyCompactList}\item 
+void \textbf{ find\+\_\+word\+\_\+less\+\_\+than\+\_\+fixed\+\_\+weight} (char $\ast$name, unsigned long long int w\+\_\+searched)
+\begin{DoxyCompactList}\small\item\em Searching for a codeword with weight less than a given value for given generator matrices, written in a file. \end{DoxyCompactList}\item 
+bool \textbf{ find\+\_\+word\+\_\+less\+\_\+than\+\_\+fixed\+\_\+weight} (int C, int R, int Q, int d\+\_\+fin)
+\begin{DoxyCompactList}\small\item\em Searching for a codeword with weight less than a given value of a randomly generatedlinear code for given parameters of the code. \end{DoxyCompactList}\item 
+bool \textbf{ find\+\_\+word\+\_\+less\+\_\+than\+\_\+fixed\+\_\+weight} (int $\ast$$\ast$input, int C, int R, int Q, int d\+\_\+fin, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Searching for a codeword with weight less than a given value of a linear code for a given generator matrix. \end{DoxyCompactList}\item 
+void \textbf{ find\+\_\+word\+\_\+equal\+\_\+to\+\_\+fixed\+\_\+weight} (char $\ast$name, unsigned long long int w\+\_\+searched)
+\begin{DoxyCompactList}\small\item\em Searching for a codeword with weight equal to a given value for given generator matrices, written in a file. \end{DoxyCompactList}\item 
+bool \textbf{ find\+\_\+word\+\_\+equal\+\_\+to\+\_\+fixed\+\_\+weight} (int C, int R, int Q, int d\+\_\+fin)
+\begin{DoxyCompactList}\small\item\em Searching for a codeword with weight equal to a given value of a randomly generatedlinear code for given parameters of the code. \end{DoxyCompactList}\item 
+bool \textbf{ find\+\_\+word\+\_\+equal\+\_\+to\+\_\+fixed\+\_\+weight} (int $\ast$$\ast$input, int C, int R, int Q, int d\+\_\+fin, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Searching for a codeword with weight equal to a given value of a linear code for a given generator matrix. \end{DoxyCompactList}\item 
+void \textbf{ calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+with\+\_\+fixed\+\_\+w} (char $\ast$name, unsigned long long int w\+\_\+searched, bool write)
+\begin{DoxyCompactList}\small\item\em Calculate number of words with weight equal to a variable for given generator matrices, written in a file. \end{DoxyCompactList}\item 
+unsigned long long int \textbf{ calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+with\+\_\+fixed\+\_\+w} (int C, int R, int Q, int w\+\_\+searched, bool write)
+\begin{DoxyCompactList}\small\item\em Calculate number of words with weight equal to a variable of a randomly generatedlinear code for given parameters of the code. \end{DoxyCompactList}\item 
+unsigned long long int \textbf{ calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+with\+\_\+fixed\+\_\+w} (int $\ast$$\ast$input, int C, int R, int Q, int w\+\_\+searched, bool write, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Calculate number of words with weight equal to a variable for a given generator matrix. \end{DoxyCompactList}\item 
+void \textbf{ calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+less\+\_\+than\+\_\+fixed\+\_\+w} (char $\ast$name, unsigned long long int w\+\_\+searched, bool write)
+\begin{DoxyCompactList}\small\item\em Calculating the number of codewords with weight less than a given value for given generator matrices, written in a file. \end{DoxyCompactList}\item 
+unsigned long long int \textbf{ calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+less\+\_\+than\+\_\+fixed\+\_\+w} (int C, int R, int Q, int w\+\_\+searched, bool write)
+\begin{DoxyCompactList}\small\item\em Calculating the number of codewords with weight less than a given value of a randomly generated linear code for given parameters of the code. \end{DoxyCompactList}\item 
+unsigned long long int \textbf{ calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+less\+\_\+than\+\_\+fixed\+\_\+w} (int $\ast$$\ast$input, int C, int R, int Q, int w\+\_\+searched, bool write, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Calculating the number of codewords with weight less than a given value for a given generator matrix. \end{DoxyCompactList}\item 
+void \textbf{ min\+\_\+dis} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Calculating the minimum distance of linear codes for given generator matrices, written in a file. \end{DoxyCompactList}\item 
+unsigned long long int \textbf{ min\+\_\+dis} (int N, int K, int Q)
+\begin{DoxyCompactList}\small\item\em Calculating the minimum distance of a randomly generated linear code for given parameters of the code. \end{DoxyCompactList}\item 
+unsigned long long int \textbf{ min\+\_\+dis} (int $\ast$$\ast$input, int N, int K, int Q, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Calculating the minimum distance of a linear code for a given generator matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\label{_lin_code_weight_inv_8cpp_a95c12cc64a928115c7a87bbd15bd6c1d} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculate\_number\_of\_words\_less\_than\_fixed\_w@{calculate\_number\_of\_words\_less\_than\_fixed\_w}}
+\index{calculate\_number\_of\_words\_less\_than\_fixed\_w@{calculate\_number\_of\_words\_less\_than\_fixed\_w}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculate\_number\_of\_words\_less\_than\_fixed\_w()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+less\+\_\+than\+\_\+fixed\+\_\+w (\begin{DoxyParamCaption}\item[{char $\ast$}]{generator\+Matrix\+File,  }\item[{unsigned long long int}]{w\+\_\+searched,  }\item[{bool}]{write }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+File} & Name of the file, containing the generator matrices \\
+\hline
+{\em W} & value of the searched weight of a codeword @parma write if true, the calculated nonproportional codewords will be written in file "{}\+Result\+\_\+codewords.\+txt"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The result for each linear code from the input is written in an output file "{}count\+\_\+less\+\_\+than.\+txt"{} 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=309pt]{_lin_code_weight_inv_8cpp_a95c12cc64a928115c7a87bbd15bd6c1d_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a2ec4bdf54a9d10f8ebb960d86f851590} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculate\_number\_of\_words\_less\_than\_fixed\_w@{calculate\_number\_of\_words\_less\_than\_fixed\_w}}
+\index{calculate\_number\_of\_words\_less\_than\_fixed\_w@{calculate\_number\_of\_words\_less\_than\_fixed\_w}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculate\_number\_of\_words\_less\_than\_fixed\_w()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily unsigned long long int calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+less\+\_\+than\+\_\+fixed\+\_\+w (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{w,  }\item[{bool}]{write,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix} & Generator matrix, saved in 2-\/dimentional array \\
+\hline
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword @parma write if true, the calculated nonproportional codewords will be written in file "{}\+Result\+\_\+codewords.\+txt"{} \\
+\hline
+{\em multiplicative\+Form} & true if the elemnts of the field are written in miltiplicative form \\
+\hline
+\end{DoxyParams}
+\label{_lin_code_weight_inv_8cpp_aab5f985fd6465bfc98a460696a3a62d3} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculate\_number\_of\_words\_less\_than\_fixed\_w@{calculate\_number\_of\_words\_less\_than\_fixed\_w}}
+\index{calculate\_number\_of\_words\_less\_than\_fixed\_w@{calculate\_number\_of\_words\_less\_than\_fixed\_w}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculate\_number\_of\_words\_less\_than\_fixed\_w()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily unsigned long long int calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+less\+\_\+than\+\_\+fixed\+\_\+w (\begin{DoxyParamCaption}\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{w,  }\item[{bool}]{write }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword @parma write if true, the calculated nonproportional codewords will be written in file "{}\+Result\+\_\+codewords.\+txt"{} \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=314pt]{_lin_code_weight_inv_8cpp_aab5f985fd6465bfc98a460696a3a62d3_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_ae6d151db55fab503163dd9a8971b70ac} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculate\_number\_of\_words\_with\_fixed\_w@{calculate\_number\_of\_words\_with\_fixed\_w}}
+\index{calculate\_number\_of\_words\_with\_fixed\_w@{calculate\_number\_of\_words\_with\_fixed\_w}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculate\_number\_of\_words\_with\_fixed\_w()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+with\+\_\+fixed\+\_\+w (\begin{DoxyParamCaption}\item[{char $\ast$}]{generator\+Matrix\+File,  }\item[{unsigned long long int}]{w\+\_\+searched,  }\item[{bool}]{write }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+File} & Name of the file, containing the generator matrices \\
+\hline
+{\em W} & value of the searched weight of a codeword @parma write if true, the calculated nonproportional codewords will be written in file "{}\+Result\+\_\+codewords.\+txt"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The result for each linear code from the input is written in an output file "{}count\+\_\+equal.\+txt"{} 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=285pt]{_lin_code_weight_inv_8cpp_ae6d151db55fab503163dd9a8971b70ac_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a984c902e4cbf4781b84d3eb9486dc43d} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculate\_number\_of\_words\_with\_fixed\_w@{calculate\_number\_of\_words\_with\_fixed\_w}}
+\index{calculate\_number\_of\_words\_with\_fixed\_w@{calculate\_number\_of\_words\_with\_fixed\_w}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculate\_number\_of\_words\_with\_fixed\_w()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily unsigned long long int calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+with\+\_\+fixed\+\_\+w (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{w,  }\item[{bool}]{write,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix} & Generator matrix, saved in 2-\/dimentional array \\
+\hline
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword @parma write if true, the calculated nonproportional codewords will be written in file "{}\+Result\+\_\+codewords.\+txt"{} \\
+\hline
+{\em multiplicative\+Form} & true if the elemnts of the field are written in miltiplicative form ~\newline
+ \\
+\hline
+\end{DoxyParams}
+\label{_lin_code_weight_inv_8cpp_a21eabbb7275a3f802b320b3181da432a} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculate\_number\_of\_words\_with\_fixed\_w@{calculate\_number\_of\_words\_with\_fixed\_w}}
+\index{calculate\_number\_of\_words\_with\_fixed\_w@{calculate\_number\_of\_words\_with\_fixed\_w}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculate\_number\_of\_words\_with\_fixed\_w()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily unsigned long long int calculate\+\_\+number\+\_\+of\+\_\+words\+\_\+with\+\_\+fixed\+\_\+w (\begin{DoxyParamCaption}\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{w,  }\item[{bool}]{write }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword @parma write if true, the calculated nonproportional codewords will be written in file "{}\+Result\+\_\+codewords.\+txt"{} \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=289pt]{_lin_code_weight_inv_8cpp_a21eabbb7275a3f802b320b3181da432a_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a407116730c4ffcf0720bf52a54b81dfa} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculateWeightDistribution@{calculateWeightDistribution}}
+\index{calculateWeightDistribution@{calculateWeightDistribution}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculateWeightDistribution()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void calculate\+Weight\+Distribution (\begin{DoxyParamCaption}\item[{char $\ast$}]{generator\+Matrix\+File }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+File} & Name of the file, containing the generator matrices \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The weight distribution is writen in output file "{}\+Weight\+\_\+dis.\+txt"{} 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=321pt]{_lin_code_weight_inv_8cpp_a407116730c4ffcf0720bf52a54b81dfa_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a72fa80dbb2f6c913c75d8a28a0475d8f} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculateWeightDistribution@{calculateWeightDistribution}}
+\index{calculateWeightDistribution@{calculateWeightDistribution}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculateWeightDistribution()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily void calculate\+Weight\+Distribution (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix} & Generator matrix, saved in 2-\/dimentional array \\
+\hline
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em multiplicative\+Form} & value=true if the elemnts of the field are written in miltiplicative form, value=false otherwise \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The weight distribution is writen in the global variable weights 
+\end{DoxyNote}
+\label{_lin_code_weight_inv_8cpp_a5aedd3708f295f1220a8d584191fa791} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!calculateWeightDistribution@{calculateWeightDistribution}}
+\index{calculateWeightDistribution@{calculateWeightDistribution}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{calculateWeightDistribution()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily void calculate\+Weight\+Distribution (\begin{DoxyParamCaption}\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Lenght of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The weight distribution is writen in the global variable weights 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=317pt]{_lin_code_weight_inv_8cpp_a5aedd3708f295f1220a8d584191fa791_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a26a2027db7a02a62add462fdbb8454c3} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!find\_word\_equal\_to\_fixed\_weight@{find\_word\_equal\_to\_fixed\_weight}}
+\index{find\_word\_equal\_to\_fixed\_weight@{find\_word\_equal\_to\_fixed\_weight}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{find\_word\_equal\_to\_fixed\_weight()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void find\+\_\+word\+\_\+equal\+\_\+to\+\_\+fixed\+\_\+weight (\begin{DoxyParamCaption}\item[{char $\ast$}]{generator\+Matrix\+File,  }\item[{unsigned long long int}]{w\+\_\+searched }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+File} & Name of the file, containing the generator matrices \\
+\hline
+{\em W} & value of the searched weight of a codeword \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The result for each linear code from the input is written in an output file "{}find\+\_\+equal.\+txt"{} 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=276pt]{_lin_code_weight_inv_8cpp_a26a2027db7a02a62add462fdbb8454c3_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_adec7dd4f609ed60c12eb582bd702487a} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!find\_word\_equal\_to\_fixed\_weight@{find\_word\_equal\_to\_fixed\_weight}}
+\index{find\_word\_equal\_to\_fixed\_weight@{find\_word\_equal\_to\_fixed\_weight}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{find\_word\_equal\_to\_fixed\_weight()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily bool find\+\_\+word\+\_\+equal\+\_\+to\+\_\+fixed\+\_\+weight (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{W,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix} & Generator matrix, saved in 2-\/dimentional array \\
+\hline
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword \\
+\hline
+{\em multiplicative\+Form} & true if the elemnts of the field are written in miltiplicative form \\
+\hline
+\end{DoxyParams}
+\label{_lin_code_weight_inv_8cpp_a238e90dc170ec984053af5610be110af} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!find\_word\_equal\_to\_fixed\_weight@{find\_word\_equal\_to\_fixed\_weight}}
+\index{find\_word\_equal\_to\_fixed\_weight@{find\_word\_equal\_to\_fixed\_weight}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{find\_word\_equal\_to\_fixed\_weight()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily bool find\+\_\+word\+\_\+equal\+\_\+to\+\_\+fixed\+\_\+weight (\begin{DoxyParamCaption}\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{W }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=281pt]{_lin_code_weight_inv_8cpp_a238e90dc170ec984053af5610be110af_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a055f565d75d5a2ca3f36c1d5452021b5} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!find\_word\_less\_than\_fixed\_weight@{find\_word\_less\_than\_fixed\_weight}}
+\index{find\_word\_less\_than\_fixed\_weight@{find\_word\_less\_than\_fixed\_weight}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{find\_word\_less\_than\_fixed\_weight()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void find\+\_\+word\+\_\+less\+\_\+than\+\_\+fixed\+\_\+weight (\begin{DoxyParamCaption}\item[{char $\ast$}]{generator\+Matrix\+File,  }\item[{unsigned long long int}]{W }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+File} & Name of the file, containing the generator matrices \\
+\hline
+{\em W} & value of the searched weight of a codeword \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The result for each linear code from the input is written in an output file "{}find\+\_\+less\+\_\+than.\+txt"{} 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{_lin_code_weight_inv_8cpp_a055f565d75d5a2ca3f36c1d5452021b5_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_afc42a0e8fa19a4d3731299bed2f41378} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!find\_word\_less\_than\_fixed\_weight@{find\_word\_less\_than\_fixed\_weight}}
+\index{find\_word\_less\_than\_fixed\_weight@{find\_word\_less\_than\_fixed\_weight}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{find\_word\_less\_than\_fixed\_weight()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily bool find\+\_\+word\+\_\+less\+\_\+than\+\_\+fixed\+\_\+weight (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{W,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix} & Generator matrix, saved in 2-\/dimentional array \\
+\hline
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword \\
+\hline
+{\em multiplicative\+Form} & true if the elemnts of the field are written in miltiplicative form \\
+\hline
+\end{DoxyParams}
+\label{_lin_code_weight_inv_8cpp_a2d7a5de748d3594aaaec807072a787dc} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!find\_word\_less\_than\_fixed\_weight@{find\_word\_less\_than\_fixed\_weight}}
+\index{find\_word\_less\_than\_fixed\_weight@{find\_word\_less\_than\_fixed\_weight}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{find\_word\_less\_than\_fixed\_weight()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily bool find\+\_\+word\+\_\+less\+\_\+than\+\_\+fixed\+\_\+weight (\begin{DoxyParamCaption}\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{int}]{W }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em W} & value of the searched weight of a codeword \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=286pt]{_lin_code_weight_inv_8cpp_a2d7a5de748d3594aaaec807072a787dc_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_a9bd34716f9cffe220734effd7bef49c9} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!min\_dis@{min\_dis}}
+\index{min\_dis@{min\_dis}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{min\_dis()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void min\+\_\+dis (\begin{DoxyParamCaption}\item[{char $\ast$}]{generator\+Matrix\+File }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+File} & Name of the file, containing the generator matrices \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+minimum distance of the linear codes are written in a output file "{}min\+\_\+distance.\+txt"{} 
+\end{DoxyNote}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=228pt]{_lin_code_weight_inv_8cpp_a9bd34716f9cffe220734effd7bef49c9_cgraph}
+\end{center}
+\end{figure}
+\label{_lin_code_weight_inv_8cpp_af53965483cf39e3231fecdf9a1ed8dfd} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!min\_dis@{min\_dis}}
+\index{min\_dis@{min\_dis}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{min\_dis()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily unsigned long long int min\+\_\+dis (\begin{DoxyParamCaption}\item[{int $\ast$$\ast$}]{generator\+Matrix,  }\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q,  }\item[{bool}]{multiplicative\+Form }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix} & Generator matrix, saved in 2-\/dimentional array \\
+\hline
+{\em N} & Length of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+{\em multiplicative\+Form} & value=true if the elemnts of the field are written in miltiplicative form, value=false otherwise \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+minimum distance of the code as unsigned long long int value 
+\end{DoxyReturn}
+\label{_lin_code_weight_inv_8cpp_a5296fb3bbb5695b06c00c036cb9fa191} 
+\index{LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}!min\_dis@{min\_dis}}
+\index{min\_dis@{min\_dis}!LinCodeWeightInv.cpp@{LinCodeWeightInv.cpp}}
+\doxysubsubsection{min\_dis()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily unsigned long long int min\+\_\+dis (\begin{DoxyParamCaption}\item[{int}]{N,  }\item[{int}]{K,  }\item[{int}]{Q }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Lenght of the code \\
+\hline
+{\em K} & Dimension of the code \\
+\hline
+{\em Q} & Number of elements in the finite field \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+minimum distance of the code as unsigned long long int value 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=232pt]{_lin_code_weight_inv_8cpp_a5296fb3bbb5695b06c00c036cb9fa191_cgraph}
+\end{center}
+\end{figure}

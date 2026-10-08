@@ -59,6 +59,7 @@ from instances_generator import (
 )
 from LEP_prediction_and_repair_v2 import (
     compute_posterior_table,
+    compute_posterior_table_exact,
     monomial_approximation,
     build_active_row_lists,
     structured_sd_repair,
@@ -206,7 +207,7 @@ def run_instance(n, k, q, alpha, beta, rmax=2, budgets=3, weight_factor=1.1,
     print(f"  instance generated ({time.time() - t0:.2f}s)")
 
     t0 = time.time()
-    posterior_table = compute_posterior_table(Q_noisy, alpha, beta, is_permutation=False)
+    posterior_table = compute_posterior_table_exact(Q_noisy, n, q, alpha, beta, is_permutation=False)
     Q_hat, S, D_loc, pi = monomial_approximation(posterior_table, F)
     rows_full = sum(1 for i in range(n) if list(Q_hat[i]) == list(Q[i]))
     print(f"  Q_hat built ({time.time() - t0:.2f}s); {rows_full}/{n} rows exactly correct")
@@ -279,7 +280,7 @@ def run_instance(n, k, q, alpha, beta, rmax=2, budgets=3, weight_factor=1.1,
         elif repair_algorithm == 'posterior_aware_prange_repair':
             w = posterior_aware_prange_repair(w_tilde, v, H2, Q_hat, S, k, tau, K_B=budgets)
         elif repair_algorithm == 'structured_sd_repair':
-            A, L = build_active_row_lists(v, S, D_loc, F, budgets=budgets)
+            A, L = build_active_row_lists(v, posterior_table, Q_hat, F, budgets=budgets)
             w = structured_sd_repair(w_tilde, v, H2, Q_hat, A, L, rmax)
         else:
             raise ValueError(f"Unknown repair_algorithm: {repair_algorithm!r}")

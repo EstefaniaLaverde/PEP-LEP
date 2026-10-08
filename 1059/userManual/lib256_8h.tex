@@ -1,0 +1,228 @@
+\doxysection{lib256.\+h File Reference}
+\label{lib256_8h}\index{lib256.h@{lib256.h}}
+
+
+Functions for calculations using 256-\/bit registers.  
+
+
+{\ttfamily \#include "{}Data.\+h"{}}\newline
+{\ttfamily \#include "{}lib128.\+h"{}}\newline
+{\ttfamily \#include "{}Read\+Write.\+h"{}}\newline
+{\ttfamily \#include "{}Polynomials.\+h"{}}\newline
+Include dependency graph for lib256.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=220pt]{lib256_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{Indent}\textbf{ Weight\+Spectrum}\par
+{\em Calculation of the weight spectrum of a linear code using 256-\/bit registers
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib256_8h_a37fd7b876b7718a3302b1c6538007250} 
+void {\bfseries calculate\+Weight\+CH3\+\_\+256} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+void \textbf{ calculate\+Weight\+Bytes\+\_\+256} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_aa058508863d4d4039fb727f354bc4c84} 
+void {\bfseries calculate\+Weight\+CH2\+\_\+256} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a6b652c3058fc545f856c47555183d96c} 
+void {\bfseries calculate\+Weight\+GF2\+\_\+256} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Search\+Less\+Than}\par
+{\em Searching for codeword with weight less than given value using 256-\/bit registers
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & if a codeword with weight {\bfseries{w}} is found \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Partial weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib256_8h_a639ac9a1b1390da4e6239da075770224} 
+bool {\bfseries calculate\+Weight\+CH3\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib256_8h_a969ac41b63d928eaf44d44bd80a0e3ee} 
+bool {\bfseries calculate\+Weight\+Bytes\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int w)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a94f6c75573a928830d6e63b655b1158d} 
+bool {\bfseries calculate\+Weight\+CH2\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a3d3378b946902e5a14740401cdb4fe16} 
+bool {\bfseries calculate\+Weight\+GF2\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Search\+Equal\+To}\par
+{\em Searching for codeword with weight equal to given value using 256-\/bit registers
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em true} & if a codeword with weight {\bfseries{w}} is found \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Partial weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib256_8h_a0e9aadefc525a2217a6cacdd82dea706} 
+bool {\bfseries calculate\+Weight\+CH3\+\_\+256\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int d)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib256_8h_a60518884c7a5ed018a3551d80ac8f85d} 
+bool {\bfseries calculate\+Weight\+Bytes\+\_\+256\+\_\+equal} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int d)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a3e4d4990385f8518c49c7586828e5dd1} 
+bool {\bfseries calculate\+Weight\+CH2\+\_\+256\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int d)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a560347fd17128af99fbe526aa395a3f5} 
+bool {\bfseries calculate\+Weight\+GF2\+\_\+256\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int d)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Count\+Equal\+To}\par
+{\em Counting the number of codewords with weight equal to given value using 256-\/bit registers and writing the generated nonproportional codewords in file {\bfseries{Result\+\_\+codewords.\+txt}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ & saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+{\em multiplicative\+Form} & if true, the codewords will be written, using multiplicative representation of the elements of the field \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Total} & number of codewords with weight {\bfseries{w}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib256_8h_a1c4b65cdaca16e730ec161714825a19b} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH3\+\_\+256\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib256_8h_a430a0ef90a12305c15a272020f390f5f} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+Bytes\+\_\+256\+\_\+equal} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a6cb6cb80d59e446e4b8768c311b4084f} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH2\+\_\+256\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_ad2e0e152e8c02d5a421248738bc05ffc} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+GF2\+\_\+256\+\_\+equal} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Count\+Less\+Than}\par
+{\em Counting the number of codewords with weight less than given value using 256-\/bit registers and writing the generated nonproportional codewords in file {\bfseries{Result\+\_\+codewords.\+txt}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em generator\+Matrix\+\_\+bits} & Generator matrix with appropriate representation of the elements of the field, \\ &  saved in a dynamic structure, defined in \doxyref{Data.\+h}{p.}{_data_8h} \\
+\hline
+{\em n} & length of the code \\
+\hline
+{\em k} & dimension of the code \\
+\hline
+{\em p} & characteristic of the field; not present for the functions for field with set characteristic \\
+\hline
+{\em m} & calculations for finite field with p$^\wedge$m elements \\
+\hline
+{\em w} & the value of the searched weight \\
+\hline
+{\em multiplicative\+Form} & if true, the codewords will be written, using multiplicative representation of the elements of the field \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Total} & number of codewords with weight less than {\bfseries{w}} \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Weight spectrum is saved in a global array {\bfseries{weights}} 
+\end{DoxyNote}
+}\begin{DoxyCompactItemize}
+\item 
+\label{lib256_8h_a520b730f9830d0001a97f29e4c911897} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH3\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 3. \end{DoxyCompactList}\item 
+\label{lib256_8h_a3987a442f78513576255d31f72b7ab9b} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+Bytes\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dmat\+\_\+type} \&generator\+Matrix\+\_\+byte, int n, int k, int m, int q, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for prime and composite fields using byte representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_a97e4dc7fa293e49b946095b3277e69f9} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+CH2\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int m, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for fields with characteristic 2 using bitwise representation. \end{DoxyCompactList}\item 
+\label{lib256_8h_afc48b0bbccbe6ba129c2a17b244c8262} 
+unsigned long long int {\bfseries calculate\+Number\+Of\+Words\+GF2\+\_\+256\+\_\+less\+\_\+than} (\textbf{ dynamic\+\_\+mat\+\_\+short} \&generator\+Matrix\+\_\+bits, int n, int k, int w, bool multiplicative\+Form)
+\begin{DoxyCompactList}\small\item\em Function for GF2 using bitwise representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Function Documentation}
+\label{lib256_8h_a5964c3eaecad7dd9fb306794af3d34de} 
+\index{lib256.h@{lib256.h}!calculateWeightBytes\_256@{calculateWeightBytes\_256}}
+\index{calculateWeightBytes\_256@{calculateWeightBytes\_256}!lib256.h@{lib256.h}}
+\doxysubsubsection{calculateWeightBytes\_256()}
+{\footnotesize\ttfamily void calculate\+Weight\+Bytes\+\_\+256 (\begin{DoxyParamCaption}\item[{\textbf{ dmat\+\_\+type} \&}]{generator\+Matrix\+\_\+byte,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{int}]{m,  }\item[{int}]{q }\end{DoxyParamCaption})}

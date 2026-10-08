@@ -1,0 +1,100 @@
+CFLAGS = -m64 -O3 -DNDEBUG -ansi  -march=native  -std=c++11 -I./include
+CC = clang++
+BUILDDIR = build
+#g++
+#x86_64-w64-mingw32-g++
+OBJ = Test-UI
+
+all: $(OBJ) clean
+
+$(OBJ): driver.o test128_WeightDistribution.o testScalar_WeightDistribution.o test128_MinimumDistance.o testScalar_MinimumDistance.o \
+test128_SearchEqual.o testScalar_SearchEqual.o test128_SearchLessThan.o testScalar_SearchLessThan.o \
+test128_CountEqual.o testScalar_CountEqual.o test128_CountLessThan.o testScalar_CountLessThan.o \
+LinCodeWeightInv.a $(BUILDDIR)
+	$(CC) $(CFLAGS) -lm driver.o -L. LinCodeWeightInv.a -o ./build/$(OBJ)
+	
+	
+	$(CC) $(CFLAGS) -lm test128_WeightDistribution.o -L. LinCodeWeightInv.a -o ./build/test128_WeightDistribution
+	$(CC) $(CFLAGS) -lm testScalar_WeightDistribution.o -L. LinCodeWeightInv.a -o ./build/testScalar_WeightDistribution
+	
+	$(CC) $(CFLAGS) -lm test128_MinimumDistance.o -L. LinCodeWeightInv.a -o ./build/test128_MinimumDistance
+	$(CC) $(CFLAGS) -lm testScalar_MinimumDistance.o -L. LinCodeWeightInv.a -o ./build/testScalar_MinimumDistance
+	
+	$(CC) $(CFLAGS) -lm test128_SearchEqual.o -L. LinCodeWeightInv.a -o ./build/test128_SearchEqual
+	$(CC) $(CFLAGS) -lm testScalar_SearchEqual.o -L. LinCodeWeightInv.a -o ./build/testScalar_SearchEqual
+	
+	$(CC) $(CFLAGS) -lm test128_SearchLessThan.o -L. LinCodeWeightInv.a -o ./build/test128_SearchLessThan
+	$(CC) $(CFLAGS) -lm testScalar_SearchLessThan.o -L. LinCodeWeightInv.a -o ./build/testScalar_SearchLessThan
+	
+	$(CC) $(CFLAGS) -lm test128_CountEqual.o -L. LinCodeWeightInv.a -o ./build/test128_CountEqual
+	$(CC) $(CFLAGS) -lm testScalar_CountEqual.o -L. LinCodeWeightInv.a -o ./build/testScalar_CountEqual
+	
+	$(CC) $(CFLAGS) -lm test128_CountLessThan.o -L. LinCodeWeightInv.a -o ./build/test128_CountLessThan
+	$(CC) $(CFLAGS) -lm testScalar_CountLessThan.o -L. LinCodeWeightInv.a -o ./build/testScalar_CountLessThan
+	
+	
+lib128.o: ./src/lib_neon.cpp ./include/lib_neon.h ./include/ReadWrite.h ./include/Data.h ./include/Polynomials.h
+	$(CC) $(CFLAGS) -c ./src/lib_neon.cpp -o lib128.o
+Data.o: ./src/Data.cpp ./include/Data.h
+	$(CC) $(CFLAGS) -c ./src/Data.cpp -o Data.o
+Polynomials.o: ./src/Polynomials.cpp ./include/Polynomials.h
+	$(CC) $(CFLAGS) -c ./src/Polynomials.cpp -o Polynomials.o
+ReadWrite.o: ./src/ReadWrite.cpp ./include/ReadWrite.h ./include/Polynomials.h
+	$(CC) $(CFLAGS) -c ./src/ReadWrite.cpp -o ReadWrite.o
+LinCodeWeightInv.o: ./src/LinCodeWeightInv.cpp ./include/LinCodeWeightInv.h ./include/ReadWrite.h ./include/Polynomials.h ./include/Data.h ./include/lib_neon.h 
+	$(CC) $(CFLAGS) -c ./src/LinCodeWeightInv.cpp -o LinCodeWeightInv.o
+testDriver.o: ./src/testDriver.cpp ./include/testDriver.h ./include/LinCodeWeightInv.h ./include/Data.h
+	$(CC) $(CFLAGS) -c ./src/testDriver.cpp -o testDriver.o
+driver.o: ./testProgram/Source.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/Source.cpp -o driver.o
+	
+	
+test128_WeightDistribution.o: ./testProgram/Test128.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/Test128.cpp -o test128_WeightDistribution.o
+testScalar_WeightDistribution.o: ./testProgram/TestScalar.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/TestScalar.cpp -o testScalar_WeightDistribution.o
+	
+	
+test128_MinimumDistance.o: ./testProgram/test128_MinimumDistance.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/test128_MinimumDistance.cpp -o test128_MinimumDistance.o
+testScalar_MinimumDistance.o: ./testProgram/testScalar_MinimumDistance.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/testScalar_MinimumDistance.cpp -o testScalar_MinimumDistance.o
+	
+
+test128_SearchEqual.o: ./testProgram/test128_SearchEqual.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/test128_SearchEqual.cpp -o test128_SearchEqual.o
+testScalar_SearchEqual.o: ./testProgram/testScalar_SearchEqual.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/testScalar_SearchEqual.cpp -o testScalar_SearchEqual.o
+	
+test128_SearchLessThan.o: ./testProgram/test128_SearchLessThan.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/test128_SearchLessThan.cpp -o test128_SearchLessThan.o
+testScalar_SearchLessThan.o: ./testProgram/testScalar_SearchLessThan.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/testScalar_SearchLessThan.cpp -o testScalar_SearchLessThan.o
+		
+	
+test128_CountEqual.o: ./testProgram/test128_CountEqual.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/test128_CountEqual.cpp -o test128_CountEqual.o
+testScalar_CountEqual.o: ./testProgram/testScalar_CountEqual.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/testScalar_CountEqual.cpp -o testScalar_CountEqual.o
+	
+test128_CountLessThan.o: ./testProgram/test128_CountLessThan.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/test128_CountLessThan.cpp -o test128_CountLessThan.o
+testScalar_CountLessThan.o: ./testProgram/testScalar_CountLessThan.cpp ./include/LinCodeWeightInv.h ./include/testDriver.h
+	$(CC) $(CFLAGS) -c ./testProgram/testScalar_CountLessThan.cpp -o testScalar_CountLessThan.o
+		
+	
+LinCodeWeightInv.a: lib128.o  ReadWrite.o Data.o LinCodeWeightInv.o testDriver.o Polynomials.o
+	ar rcs LinCodeWeightInv.a lib128.o  ReadWrite.o Data.o LinCodeWeightInv.o testDriver.o Polynomials.o
+
+libs: LinCodeWeightInv.a
+$(BUILDDIR): ./testFiles/TestDataBig ./testFiles/TestDataSmall 
+	mkdir -p build
+	cp ./testFiles/TestDataBig ./build/TestDataBig
+	cp ./testFiles/TestDataSmall ./build/TestDataSmall
+	cp ./testFiles/ArticleData ./build/ArticleData
+install: LinCodeWeightInv.a
+	mkdir -p lib
+	cp LinCodeWeightInv.a ./lib/LinCodeWeightInv.a
+	-rm *.o
+clean:
+	-rm *.o

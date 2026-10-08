@@ -1,0 +1,19 @@
+{
+  "n": 252,
+  "k": 126,
+  "q": 127,
+  "alpha": 0.01,
+  "beta": 0.03,
+  "weight_factor": 1.1,
+  "budgets": 10,
+  "seed": 6,
+  "target_weight": 103,
+  "representation": "list_based_algorithm5",
+  "v_weight": 103,
+  "r_v": 25,
+  "rmax": 20,
+  "tau": 40,
+  "elapsed_s": 1083.9766447544098,
+  "outcome": "failed",
+  "repaired": false
+}
